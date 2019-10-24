@@ -4,3 +4,6 @@ from django.http import HttpResponse
 
 def home(request):
     return render(request, 'home.html')
+
+def crear_empresa(request):
+    return render(request,'crear_empresa.html')
