@@ -1,0 +1,33 @@
+body {
+  background-color: #F8F9F9;
+}
+
+#nav_list li {
+  font-size: 18px;
+}
+
+#nav_bar {
+  background-color: #C0392B;
+}
+
+.nav-link {
+  color: white !important;
+}
+
+.nav-link:hover {
+  border-bottom: 1px solid white;
+}
+
+.navbar-brand {
+  font-size: 38px;
+}
+
+.navbar-brand i{
+  color: #F1948A !important;
+}
+
+.navbar-text {
+  font-size: 18px;
+  color: white !important;
+  font-style: italic;
+}
