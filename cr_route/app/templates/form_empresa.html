@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}
+    CR-Route
+{% endblock title %}
+
+{% block mainContent %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="text-center">Registrar nueva empresa</h1>
+                <form method="POST" action="{{action}}">
+                    <!-- NOMBRE -->
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input value="{{nombre}}" name="nombre" type="text" class="form-control">
+                    </div>
+                    
+                    <!-- ZONA -->
+                    <div class="form-group">
+                        <label for="zona">Zona</label>
+                        <input value="{{zona}}" name="zona" type="text" class="form-control" aria-describedby="help-zona"> 
+                        <small id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa</small>
+                    </div>
+
+                    <!-- TELEFONO -->
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input value="{{telefono}}" name="telefono" type="number" class="form-control"> 
+                    </div>
+
+
+                    <!-- CORREO -->
+                    <div class="form-group">
+                        <label for="correo">Correo</label>
+                        <input value="{{correo}}" name="correo" type="email" class="form-control">
+                    </div>
+
+                    <!-- DIRECCION -->
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <input value="{{direccion}}" name="direccion" type="text" class="form-control">
+                    </div>
+
+                    <!-- LATITUD -->
+                    <div class="form-group">
+                        <label for="lat">Latitud</label>
+                        <input value="{{latitud}}" name="latitud" type="text" class="form-control">
+                    </div>
+
+                    <!-- LONGITUD -->
+                    <div class="form-group">
+                        <label for="lon">Longitud</label>
+                        <input value="{{longitud}}" name="longitud" type="text" class="form-control">
+                    </div>
+
+                    <!-- HORARIO -->
+                    <div class="form-group">
+                        <label for="horario">Horario</label>
+                        <input value="{{horario}}" name="horario" type="text" class="form-control" aria-describedby="help-horario">
+                        <small id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, a partir de las 6:00am luego cada 30 minutos hasta las 9:00pm.</small>
+                    </div>
+
+                    <!-- ENVIAR -->
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    
+{% endblock mainContent %}
