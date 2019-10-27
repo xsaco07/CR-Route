@@ -26,6 +26,7 @@ class Parada(models.Model):
 
 class Usuario(models.Model):
     nombre_usuario = models.CharField(max_length=30)
+    nombre = models.CharField(max_length=30)
     apellido1 = models.CharField(max_length=30)
     apellido2 = models.CharField(max_length=30)
     contrasena = models.CharField(max_length=30)
