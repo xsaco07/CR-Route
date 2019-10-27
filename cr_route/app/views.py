@@ -23,7 +23,9 @@ def admin_rutas(request):
 # Form vacío
 def borrar_empresa(request, id):
     Empresa.objects.filter(id=id)[0].delete()
-    return HttpResponse("OK")
+    return render(request,"form_empresa.html",{
+        "info_message":"Empresa borrada correctamente. ¿Te gustaría agregar una nueva?",
+        "action":"/empresa/insertar/"})
 
 @csrf_exempt
 def editar_empresa(request, id):
@@ -39,7 +41,10 @@ def editar_empresa(request, id):
         empresa.longitud = data["longitud"]
         empresa.horario = data["horario"]
         empresa.save()
-        return HttpResponse("OK")
+        return render(request,"form_empresa.html",{
+            "action":"empresa/insertar/",
+            "info_message":"¡Datos actualizados correctamente!"
+        })
     elif request.method == "GET":
         context = empresa.__dict__
         context["action"] = "/empresa/editar/"+str(id)+"/"
@@ -47,7 +52,9 @@ def editar_empresa(request, id):
 
 
 def listar_empresa(request):
-    return render(request, 'admEmpresas.html')
+    empresas = Empresa.objects.all()
+    context = {"empresas":empresas}
+    return render(request, 'admEmpresas.html', context=context)
 
 @csrf_exempt
 def insertar_empresa(request):
@@ -63,7 +70,7 @@ def insertar_empresa(request):
         empresa.longitud = data["longitud"]
         empresa.horario = data["horario"]
         empresa.save()
-        return HttpResponse("OK")
+        return render(request, "form_empresa.html",{"info_message":"Empresa registrada exitosamente!"})
     elif request.method == "GET":
         context = {"action":"/empresa/insertar/"}
         return render(request, "form_empresa.html", context=context)
