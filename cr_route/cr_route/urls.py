@@ -19,16 +19,12 @@ from app.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
     path('inicio/', home, name='inicio'),
     path('rutas/', admin_rutas, name='rutas'),
     path('contacto/', admin_rutas, name='contacto'),
     path('acerca_de/', admin_rutas, name='acerca_de'),
-=======
-    path('home/', home),
     path('empresa/borrar/<int:id>/', borrar_empresa),
     path('empresa/insertar/', insertar_empresa),
     path('empresa/editar/<int:id>/', editar_empresa),
-    path('empresa/listar/', listar_empresa),
->>>>>>> 6e75f3be20de08159358063c35ac2085a80d04ff
+    path('empresa/listar/', listar_empresa, name='empresas'),
 ]
