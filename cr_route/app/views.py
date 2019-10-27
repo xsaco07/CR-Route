@@ -86,7 +86,7 @@ def login(request):
         try:
             usuario = Usuario.objects.filter(nombre_usuario=nombre_usuario)[0]
             if usuario.nombre_usuario == nombre_usuario and usuario.contrasena == contrasena:
-                return redirect('/home/')
+                return redirect('/inicio/')
             messages.info(request, 'Nombre de usuario o contraseña incorrecta!')
             return render(request, "login.html")
         except:

@@ -25,11 +25,11 @@ class Parada(models.Model):
     longitud = models.FloatField()
 
 class Usuario(models.Model):
-    nombre_usuario = models.CharField(max_length=30, blank=False)
-    nombre = models.CharField(max_length=30, blank=False)
-    apellido1 = models.CharField(max_length=30, blank=False)
-    apellido2 = models.CharField(max_length=30, blank=False)
-    contrasena = models.CharField(max_length=30, blank=False)
+    nombre_usuario = models.CharField(max_length=30)
+    nombre = models.CharField(max_length=30)
+    apellido1 = models.CharField(max_length=30)
+    apellido2 = models.CharField(max_length=30)
+    contrasena = models.CharField(max_length=30)
 
 class Log(models.Model):
     nombre_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
