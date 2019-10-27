@@ -1,24 +1,24 @@
 <nav class="navbar navbar-dark navbar-expand-lg" id="nav_bar">
-      <a href="#" class="navbar-brand">
+      <a href="{% url 'inicio' %}" class="navbar-brand">
         <i class="fas fa-route"></i>
         RutaCR
       </a>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto" id="nav_list">
           <li class="nav-item">
-            <a href="#" class="nav-link">Inicio</a>
+            <a href="{% url 'inicio' %}" class="nav-link">Inicio</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">Empresas</a>
+            <a href="{% url 'empresas' %}" class="nav-link">Empresas</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">Rutas</a>
+            <a href="{% url 'rutas' %}" class="nav-link">Rutas</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">Contáctenos</a>
+            <a href="{% url 'contacto' %}" class="nav-link">Contáctenos</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">Acerca del proyecto</a>
+            <a href="{% url 'acerca_de' %}" class="nav-link">Acerca del proyecto</a>
           </li>
         </ul>
       </div>
