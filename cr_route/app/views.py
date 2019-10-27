@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 def home(request):
     return render(request, 'home.html')
 
-def admin_rutas(request):
+def listar_rutas(request):
     # Esta parte es de prueba
     # Creo una ruta y la paso por el context cada vez que se solicita la página
     # TODO: implementar el formulario de crear rutas para quitar esto
