@@ -1,12 +1,26 @@
+  
 {% extends "base.html" %}
-{% load static %}
 
 {% block title %}
-    Rutas
-{% endblock title %}
+    Administrar Empresas
+{% endblock %}
 
 {% block mainContent %}
 
-  <h2>Adm empresas</h2>
+<div class="container">
+  <div class="row text-center">
+    <!-- AGREGAR CARDS DE EMPRESAS -->
+    {% for empresa in empresas %}
+        <div class="col-3">
+            {% include "card.html" with empresa=empresa %}
+        </div>  
+    {% endfor %}
 
-{% endblock mainContent %}
+    <!-- PARA AGREGAR EL CARD DE INSERTAR EMPRESA -->
+    <div class="col-3">
+        {% include "card.html" with empresa=None %}
+    </div>  
+  </div>
+</div>
+
+{% endblock %}

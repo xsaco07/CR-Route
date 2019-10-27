@@ -8,7 +8,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 offset-md-2">
-                <h1 class="text-center">Registrar nueva empresa</h1>
+                <h1 class="text-center" style="padding: 25px;">Fomulario Empresa</h1>
+                {% if info_message %}
+                    <div class="alert alert-success" role="alert">
+                        {{info_message}}
+                    </div>
+                {% endif %}
                 <form method="POST" action="{{action}}">
                     <!-- NOMBRE -->
                     <div class="form-group">
