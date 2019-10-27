@@ -24,4 +24,8 @@ urlpatterns = [
     path('empresa/insertar/', insertar_empresa, name='insertar_empresa'),
     path('empresa/editar/<int:id>/', editar_empresa, name='editar_empresa'),
     path('empresa/listar/', listar_empresa, name='empresas'),
+    path('ruta/borrar/<int:id>/', borrar_ruta),
+    path('ruta/insertar/', insertar_ruta),
+    path('ruta/editar/<int:id>/', editar_ruta),
+    path('ruta/listar/', listar_rutas, name='rutas'),
 ]
