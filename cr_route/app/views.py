@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.http import HttpResponse
 from app.models import *
 from django.views.decorators.csrf import csrf_exempt
@@ -92,7 +93,6 @@ def editar_ruta(request, id):
         ruta.duracion = data["duracion"]
         ruta.rampa = data["rampa"]
         ruta.save()
-        ruta.save()
         return redirect('/inicio/')
     elif request.method == "GET":
         context = ruta.__dict__
@@ -119,3 +119,38 @@ def insertar_ruta(request):
     elif request.method == "GET":
         context = {"action":"/ruta/insertar/"}
         return render(request, "form_ruta.html", context=context)
+
+@csrf_exempt
+def registro(request):
+    if request.method == "POST":
+        data = request.POST
+        usuario = Usuario()
+        usuario.nombre_usuario = data["nombre_usuario"]
+        usuario.nombre = data["nombre"]
+        usuario.apellido1 = data["apellido1"]
+        usuario.apellido2 = data["apellido2"]
+        usuario.contrasena = data["contrasena"]
+        usuario.save()
+        return redirect('/iniciar_sesion/')
+    elif request.method == "GET":
+        context = {"action": "/registro/"}
+        return render(request, "registro.html", context=context)
+
+@csrf_exempt
+def iniciar_sesion(request):
+    if request.method == "POST":
+        data = request.POST
+        nombre_usuario = data["nombre_usuario"]
+        contrasena = data["contrasena"]
+        try:
+            usuario = Usuario.objects.filter(nombre_usuario=nombre_usuario)[0]
+            if usuario.nombre_usuario == nombre_usuario and usuario.contrasena == contrasena:
+                return redirect('/inicio/')
+            messages.info(request, 'Nombre de usuario o contraseña incorrecta!')
+            return render(request, "iniciar_sesion.html")
+        except:
+            messages.info(request, 'Nombre de usuario o contraseña incorrecta!')
+            return render(request, "iniciar_sesion.html")
+
+    elif request.method == "GET":
+        return render(request, "iniciar_sesion.html")

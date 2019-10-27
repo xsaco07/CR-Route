@@ -31,4 +31,6 @@ urlpatterns = [
     path('ruta/insertar/', insertar_ruta),
     path('ruta/editar/<int:id>/', editar_ruta),
     path('ruta/listar/', listar_rutas, name='rutas'),
+    path('registro/', registro),
+    path('iniciar_sesion/', iniciar_sesion),
 ]
