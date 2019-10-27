@@ -28,4 +28,6 @@ urlpatterns = [
     path('ruta/editar/<int:id>/', editar_ruta, name='editar_ruta'),
     path('ruta/insertar/', insertar_ruta, name='insertar_ruta'),
     path('ruta/borrar/<int:id>/', borrar_ruta, name='borrar_ruta'),
+    path('registro/', registro),
+    path('iniciar_sesion/', iniciar_sesion),
 ]
