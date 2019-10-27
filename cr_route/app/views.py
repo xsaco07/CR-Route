@@ -29,7 +29,6 @@ def editar_ruta(request, id):
         ruta.duracion = data["duracion"]
         ruta.rampa = data["rampa"]
         ruta.save()
-        ruta.save()
         return redirect('/inicio/')
     elif request.method == "GET":
         context = model_to_dict(ruta)

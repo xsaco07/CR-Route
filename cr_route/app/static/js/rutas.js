@@ -10,14 +10,49 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19
 }).addTo(mymap);
 
-var marker = L.marker([startPoint.latitude, startPoint.longitude]).addTo(mymap);
-var marker = L.marker([10.0515451, -84.3144467]).addTo(mymap);
-var marker = L.marker([10.0472983, -84.315735]).addTo(mymap);
+var markers = [];
+var coordenates = [];
+var polylines = []
+var p_group;
 
-var trace = [
-    [startPoint.latitude, startPoint.longitude],
-    [10.0515451, -84.3144467],
-    [10.0472983, -84.315735]
-];
+function onMapClick(e) {
 
-var polyline = L.polyline(trace, {color: 'red'}).addTo(mymap);
+  var newMarker = L.marker(e.latlng);
+  var lat = e.latlng.lat;
+  var lng = e.latlng.lng;
+
+  newMarker.addTo(mymap);
+
+  newMarker.on('click',function(){
+
+    polylines = [];
+    p_group.remove();
+    this.remove();
+
+    var marker_lat = this.getLatLng().lat;
+    var marker_lng = this.getLatLng().lng;
+
+    var i = markers.indexOf(this);
+
+    console.log("I: ", i);
+
+    markers.splice(i, 1);
+    coordenates.splice(i, 1);
+
+    console.log("After delete: ", markers);
+
+    polylines.push(L.polyline(coordenates, {color: 'red'}));
+    p_group = L.layerGroup(polylines).addTo(mymap);
+
+  });
+
+  markers.push(newMarker);
+  coordenates.push([lat, lng]);
+
+  console.log("Pushed: ", markers);
+  polylines.push(L.polyline(coordenates, {color: 'red'}));
+  p_group = L.layerGroup(polylines).addTo(mymap);
+
+}
+
+mymap.on('click', onMapClick);
