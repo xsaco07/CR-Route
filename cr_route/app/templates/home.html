@@ -1,21 +1,42 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     CR-Route
 {% endblock title %}
 
 {% block mainContent %}
-    <style>
-        img{
-            display: block;
-            margin: auto;
-            margin-top:20px;
-            width: 80%;
-            height: 80%;
-        }
-    </style>
 
-    <img src="https://hw2.thisamericanlife.org/sites/default/files/styles/landscape/public/episodes/images/102.jpg?itok=Fqseb0aw" alt="">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
-    
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-left">
+          <h1 id="eslogan">Título/Eslogan</h2>
+          <h4 id="subtitle">Subtítulo</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-left">
+          <h1 id="eslogan">Título/Eslogan</h2>
+          <h4 id="subtitle">Subtítulo</h4>
+        </div>
+      </div>
+      <div class="row mt-5 justify-content-center">
+        <div class="col-10 text-center">
+          <p id="text">Aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+      </div>
+      <div class="row mt-5 justify-content-center">
+        <div class="col-10 text-center">
+          <p id="text">Aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+      </div>
+      <div class="row mt-5 justify-content-center">
+        <div class="col-10 text-center">
+          <p id="text">Aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+      </div>
+    </div>
+
 {% endblock mainContent %}

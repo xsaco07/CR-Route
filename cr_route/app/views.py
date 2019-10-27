@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from app.models import *
 from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 
 # Create your views here.
 
@@ -9,20 +10,12 @@ def home(request):
     return render(request, 'home.html')
 
 def listar_rutas(request):
-    # Esta parte es de prueba
-    # Creo una ruta y la paso por el context cada vez que se solicita la página
-    # TODO: implementar el formulario de crear rutas para quitar esto
-    empresas = Empresa.objects.all()
-    empresa_id = empresas[0].id
-    new_route = Ruta(empresa=empresas[0], descripcion="descripcion", precio=50, horario="lunes a viernes", duracion=30, rampa=False)
-    new_route.save()
     rutas = Ruta.objects.all()
-    print(rutas)
     return render(request, 'admRutas.html', {'rutas':rutas})
 
 def borrar_ruta(request, id):
     Ruta.objects.filter(id=id)[0].delete()
-    return redirect('/inicio/')
+    return listar_rutas(request)
 
 @csrf_exempt
 def editar_ruta(request, id):
@@ -39,9 +32,9 @@ def editar_ruta(request, id):
         ruta.save()
         return redirect('/inicio/')
     elif request.method == "GET":
-        context = ruta.__dict__
+        context = model_to_dict(ruta)
         context["action"] = "/ruta/editar/"+str(id)+"/"
-        return render(request, "form_ruta.html", context=context)
+        return render(request, "editar_crear_rutas.html", context=context)
 
 @csrf_exempt
 def insertar_ruta(request):
@@ -85,7 +78,7 @@ def editar_empresa(request, id):
             "info_message":"¡Datos actualizados correctamente!"
         })
     elif request.method == "GET":
-        context = empresa.__dict__
+        context = model_to_dict(empresa)
         context["action"] = "/empresa/editar/"+str(id)+"/"
         return render(request, "form_empresa.html", context=context)
 
