@@ -3,25 +3,56 @@ from django.contrib import messages
 from django.http import HttpResponse
 from app.models import *
 from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 
 # Create your views here.
 
 def home(request):
     return render(request, 'home.html')
 
-def admin_rutas(request):
-    # Esta parte es de prueba
-    # Creo una ruta y la paso por el context cada vez que se solicita la página
-    # TODO: implementar el formulario de crear rutas para quitar esto
-    empresas = Empresa.objects.all()
-    empresa_id = empresas[0].id
-    new_route = Ruta(empresa=empresas[0], descripcion="descripcion", precio=50, horario="lunes a viernes", duracion=30, rampa=False)
-    new_route.save()
+def listar_rutas(request):
     rutas = Ruta.objects.all()
-    print(rutas)
     return render(request, 'admRutas.html', {'rutas':rutas})
 
-# Form vacío
+def borrar_ruta(request, id):
+    Ruta.objects.filter(id=id)[0].delete()
+    return listar_rutas(request)
+
+@csrf_exempt
+def editar_ruta(request, id):
+    ruta = Ruta.objects.filter(id=id)[0]
+    if request.method == "POST":
+        data = request.POST
+        ruta.empresa = Empresa.objects.last()
+        ruta.descripcion = data["descripcion"]
+        ruta.precio = data["precio"]
+        ruta.horario = data["horario"]
+        ruta.duracion = data["duracion"]
+        ruta.rampa = data["rampa"]
+        ruta.save()
+        return redirect('/inicio/')
+    elif request.method == "GET":
+        context = model_to_dict(ruta)
+        context["action"] = "/ruta/editar/"+str(id)+"/"
+        return render(request, "editar_crear_rutas.html", context=context)
+
+@csrf_exempt
+def insertar_ruta(request):
+    if request.method == "POST":
+        data = request.POST
+        ruta = Ruta()
+        ruta.empresa = Empresa.objects.last()
+        ruta.descripcion = data["descripcion"]
+        ruta.precio = data["precio"]
+        ruta.horario = data["horario"]
+        ruta.duracion = data["duracion"]
+        ruta.rampa = data["rampa"]
+        ruta.save()
+        return redirect('/inicio/')
+    elif request.method == "GET":
+        context = {"action":"/ruta/insertar/"}
+        return render(request, "editar_crear_rutas.html", context=context)
+
 def borrar_empresa(request, id):
     Empresa.objects.filter(id=id)[0].delete()
     return render(request,"form_empresa.html",{
@@ -47,10 +78,9 @@ def editar_empresa(request, id):
             "info_message":"¡Datos actualizados correctamente!"
         })
     elif request.method == "GET":
-        context = empresa.__dict__
+        context = model_to_dict(empresa)
         context["action"] = "/empresa/editar/"+str(id)+"/"
         return render(request, "form_empresa.html", context=context)
-
 
 def listar_empresa(request):
     empresas = Empresa.objects.all()
@@ -118,7 +148,7 @@ def insertar_ruta(request):
         return redirect('/inicio/')
     elif request.method == "GET":
         context = {"action":"/ruta/insertar/"}
-        return render(request, "form_ruta.html", context=context)
+        return render(request, "editar_crear_rutas.html", context=context)
 
 @csrf_exempt
 def registro(request):

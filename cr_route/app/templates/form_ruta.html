@@ -1,63 +1,43 @@
-{% extends "base.html" %}
+<form method="POST" action="{{action}}" id="ruta-form">
+    <!-- EMPRESA -->
+    <div class="form-group">
+        <input disabled value="{{empresa}}" name="empresa" type="text" class="form-control" required placeholder="Empresa">
+    </div>
+    <br>
 
-{% block title %}
-    CR-Route
-{% endblock title %}
+    <!-- DESCRIPCION -->
+    <div class="form-group">
+        <input value="{{descripcion}}" name="descripcion" type="text" class="form-control" required placeholder="Descripción">
+    </div>
+    <br>
 
-{% block mainContent %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <br>
-                <h1 class="text-center">Registrar nueva ruta</h1>
-                <br>
-                <form method="POST" action="{{action}}">
-                    <!-- EMPRESA -->
-                    <div class="form-group">
-                        <input disabled value="{{empresa_id}}" name="empresa" type="text" class="form-control" required placeholder="Empresa">
-                    </div>
-                    <br>
+    <!-- PRECIO -->
+    <div class="form-group">
+        <input value="{{precio}}" name="precio" type="number" class="form-control" required placeholder="Precio">
+    </div>
+    <br>
 
-                    <!-- DESCRIPCION -->
-                    <div class="form-group">
-                        <input value="{{descripcion}}" name="descripcion" type="text" class="form-control" required placeholder="Descripción">
-                    </div>
-                    <br>
+    <!-- HORARIO -->
+    <div class="form-group">
+        <input value="{{horario}}" name="horario" type="text" class="form-control" required placeholder="Horario">
+    </div>
+    <br>
 
-                    <!-- PRECIO -->
-                    <div class="form-group">
-                        <input value="{{precio}}" name="precio" type="number" class="form-control" required placeholder="Precio">
-                    </div>
-                    <br>
+    <!-- DURACION -->
+    <div class="form-group">
+        <input value="{{duracion}}" name="duracion" type="number" class="form-control" required placeholder="Duración">
+    </div>
+    <br>
 
-                    <!-- HORARIO -->
-                    <div class="form-group">
-                        <input value="{{horario}}" name="horario" type="text" class="form-control" required placeholder="Horario">
-                    </div>
-                    <br>
-
-                    <!-- DURACION -->
-                    <div class="form-group">
-                        <input value="{{duracion}}" name="duracion" type="number" class="form-control" required placeholder="Duración">
-                    </div>
-                    <br>
-
-                    <!-- RAMPA -->
-                    <div class="form-group">
-                        <select class="form-control" name="rampa">
-                            <option value="" disabled selected>¿Tiene rampa?</option>
-                            <option value="True" required>Sí</option>
-                            <option value="False" required>No</option>
-                        </select>
-                    </div>
-
-                    <!-- ENVIAR -->
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                </form>
-
-            </div>
-        </div>
+    <!-- RAMPA -->
+    <div class="form-group">
+        <select class="form-control" name="rampa">
+            <option value="" disabled selected>¿Tiene rampa?</option>
+            <option value="True" required>Sí</option>
+            <option value="False" required>No</option>
+        </select>
     </div>
 
-    
-{% endblock mainContent %}
+    <!-- ENVIAR -->
+    <button type="submit" class="btn btn-success" style="padding: 5px 50px; font-size: 18px;">Listo</button>
+</form>
