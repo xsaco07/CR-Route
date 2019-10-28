@@ -48,7 +48,8 @@ def insertar_ruta(request):
         ruta.duracion = data["duracion"]
         ruta.rampa = data["rampa"]
         ruta.save()
-        return redirect('/inicio/')
+        messages.info(request, 'Ruta creada exitosamente.')
+        return render(request, "admRutas.html")
     elif request.method == "GET":
         context = {"action":"/ruta/insertar/"}
         return render(request, "editar_crear_rutas.html", context=context)
@@ -151,7 +152,8 @@ def insertar_ruta(request):
         ruta.duracion = data["duracion"]
         ruta.rampa = data["rampa"]
         ruta.save()
-        return redirect('/inicio/')
+        messages.info(request, 'Ruta creada exitosamente.')
+        return render(request, "admRutas.html")
     elif request.method == "GET":
         context = {"action":"/ruta/insertar/"}
         return render(request, "editar_crear_rutas.html", context=context)
@@ -166,8 +168,15 @@ def registro(request):
         usuario.apellido1 = data["apellido1"]
         usuario.apellido2 = data["apellido2"]
         usuario.contrasena = data["contrasena"]
-        usuario.save()
-        return redirect('/iniciar_sesion/')
+        try:
+            usuario = Usuario.objects.filter(nombre_usuario=usuario.nombre_usuario)[0]
+            if usuario.nombre_usuario == data["nombre_usuario"]:
+                messages.info(request, 'Nombre de usuario ya existente, intente con otro diferente.')
+                return render(request, "registro.html")
+        except:
+            usuario.save()
+            messages.info(request, 'Usuario creado exitosamente.')
+            return render(request, "iniciar_sesion.html")
     elif request.method == "GET":
         context = {"action": "/registro/"}
         return render(request, "registro.html", context=context)
@@ -182,10 +191,10 @@ def iniciar_sesion(request):
             usuario = Usuario.objects.filter(nombre_usuario=nombre_usuario)[0]
             if usuario.nombre_usuario == nombre_usuario and usuario.contrasena == contrasena:
                 return redirect('/inicio/')
-            messages.info(request, 'Nombre de usuario o contraseña incorrecta!')
+            messages.info(request, 'El nombre de usuario o contraseña que has introducido es incorrecta')
             return render(request, "iniciar_sesion.html")
         except:
-            messages.info(request, 'Nombre de usuario o contraseña incorrecta!')
+            messages.info(request, 'El nombre de usuario o contraseña que has introducido es incorrecta')
             return render(request, "iniciar_sesion.html")
 
     elif request.method == "GET":

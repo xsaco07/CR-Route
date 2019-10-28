@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 offset-md-2">
-                <h1 class="text-center" style="padding: 25px;">Fomulario Empresa</h1>
+                <h1 class="text-center" style="padding: 25px;">Formulario Empresa</h1>
                 {% if info_message %}
                     <div class="alert alert-success" role="alert">
                         {{info_message}}
@@ -25,7 +25,8 @@
                     <div class="form-group">
                         <label for="zona">Zona</label>
                         <input value="{{zona}}" name="zona" type="text" class="form-control" aria-describedby="help-zona"> 
-                        <small id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa</small>
+                        <small id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa (sitio origen y destino)</small>
+                        <small id="help-zona" class="form-text text-muted">Ej: Alajuela - San José, Alajuela - Heredia...</small>
                     </div>
 
                     <!-- TELEFONO -->
@@ -37,14 +38,15 @@
 
                     <!-- CORREO -->
                     <div class="form-group">
-                        <label for="correo">Correo</label>
+                        <label for="correo">Correo electrónico</label>
                         <input value="{{correo}}" name="correo" type="email" class="form-control">
                     </div>
 
                     <!-- DIRECCION -->
                     <div class="form-group">
-                        <label for="direccion">Dirección</label>
+                        <label for="direccion">Dirección física de su terminal</label>
                         <input value="{{direccion}}" name="direccion" type="text" class="form-control">
+                        <small id="help-zona" class="form-text text-muted">Por señas</small>
                     </div>
 
                     <!-- LATITUD -->
@@ -61,7 +63,7 @@
 
                     <!-- HORARIO -->
                     <div class="form-group">
-                        <label for="horario">Horario</label>
+                        <label for="horario">Horario de atención al público</label>
                         <input value="{{horario}}" name="horario" type="text" class="form-control" aria-describedby="help-horario">
                         <small id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, a partir de las 6:00am luego cada 30 minutos hasta las 9:00pm.</small>
                     </div>

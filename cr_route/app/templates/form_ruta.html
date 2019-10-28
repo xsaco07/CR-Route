@@ -16,6 +16,7 @@
 
     <!-- COMBO DE EMPRESA -->
     <div class="form-group">
+        <label for="nombre">Empresa</label>
         <select id="empresa" value="" name="id_empresa" class="form-control" required>
                 <option>Loading... </option>
         </select>
@@ -24,32 +25,38 @@
 
     <!-- DESCRIPCION -->
     <div class="form-group">
-        <input value="{{descripcion}}" name="descripcion" type="text" class="form-control" required placeholder="Descripción">
+        <label for="nombre">Descripción</label>
+        <input value="{{descripcion}}" name="descripcion" type="text" class="form-control" required>
     </div>
     <br>
 
     <!-- PRECIO -->
     <div class="form-group">
-        <input value="{{precio}}" name="precio" type="number" class="form-control" required placeholder="Precio">
+        <label for="nombre">Costo del pasaje</label>
+        <input value="{{precio}}" name="precio" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
     </div>
     <br>
 
     <!-- HORARIO -->
     <div class="form-group">
-        <input value="{{horario}}" name="horario" type="text" class="form-control" required placeholder="Horario">
+        <label for="nombre">Horario de servicio</label>
+        <input value="{{horario}}" name="horario" type="text" class="form-control" required>
+        <small id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, a partir de las 6:00am luego cada 30 minutos hasta las 9:00pm.</small>
     </div>
     <br>
 
     <!-- DURACION -->
     <div class="form-group">
-        <input value="{{duracion}}" name="duracion" type="number" class="form-control" required placeholder="Duración">
+        <label for="nombre">Duración</label>
+        <input value="{{duracion}}" name="duracion" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
+        <small id="help-horario" class="form-text text-muted">Aproximado del viaje en minutos. Ej: 60</small>
     </div>
     <br>
 
     <!-- RAMPA -->
     <div class="form-group">
         <select class="form-control" name="rampa">
-            <option value="" disabled selected>¿Tiene rampa?</option>
+            <option value="" disabled selected>¿Cuenta con unidades para el transporte de personas con discapacidad?</option>
             <option value="True" required>Sí</option>
             <option value="False" required>No</option>
         </select>
