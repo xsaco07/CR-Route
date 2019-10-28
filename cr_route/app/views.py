@@ -158,6 +158,52 @@ def insertar_empresa(request):
         context = {"action":"/empresa/insertar/"}
         return render(request, "form_empresa.html", context=context)
 
+# Form vacío
+def borrar_ruta(request, id):
+    Ruta.objects.filter(id=id)[0].delete()
+    return redirect('/inicio/')
+
+@csrf_exempt
+def editar_ruta(request, id):
+    ruta = Ruta.objects.filter(id=id)[0]
+    if request.method == "POST":
+        data = request.POST
+        ruta.empresa = Empresa.objects.last()
+        ruta.descripcion = data["descripcion"]
+        ruta.precio = data["precio"]
+        ruta.horario = data["horario"]
+        ruta.duracion = data["duracion"]
+        ruta.rampa = data["rampa"]
+        ruta.save()
+        return redirect('/inicio/')
+    elif request.method == "GET":
+        context = ruta.__dict__
+        context["action"] = "/ruta/editar/"+str(id)+"/"
+        return render(request, "form_ruta.html", context=context)
+
+
+def listar_rutas(request):
+    rutas = Ruta.objects.all()
+    return render(request, 'admRutas.html',{"rutas":rutas})
+
+@csrf_exempt
+def insertar_ruta(request):
+    if request.method == "POST":
+        data = request.POST
+        ruta = Ruta()
+        ruta.empresa = Empresa.objects.last()
+        ruta.descripcion = data["descripcion"]
+        ruta.precio = data["precio"]
+        ruta.horario = data["horario"]
+        ruta.duracion = data["duracion"]
+        ruta.rampa = data["rampa"]
+        ruta.save()
+        messages.info(request, 'Ruta creada exitosamente.')
+        return render(request, "admRutas.html")
+    elif request.method == "GET":
+        context = {"action":"/ruta/insertar/"}
+        return render(request, "editar_crear_rutas.html", context=context)
+
 @csrf_exempt
 def registro(request):
     if request.method == "POST":

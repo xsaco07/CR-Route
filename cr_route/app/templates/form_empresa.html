@@ -18,13 +18,13 @@
                     <!-- NOMBRE -->
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input value="{{nombre}}" name="nombre" type="text" class="form-control">
+                        <input value="{{nombre}}" name="nombre" type="text" class="form-control" required>
                     </div>
                     
                     <!-- ZONA -->
                     <div class="form-group">
                         <label for="zona">Zona</label>
-                        <input value="{{zona}}" name="zona" type="text" class="form-control" aria-describedby="help-zona"> 
+                        <input value="{{zona}}" name="zona" type="text" class="form-control" aria-describedby="help-zona" required> 
                         <small id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa (sitio origen y destino)</small>
                         <small id="help-zona" class="form-text text-muted">Ej: Alajuela - San José, Alajuela - Heredia...</small>
                     </div>
@@ -32,39 +32,39 @@
                     <!-- TELEFONO -->
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input value="{{telefono}}" name="telefono" type="number" class="form-control"> 
+                        <input value="{{telefono}}" name="telefono" type="number" class="form-control" required> 
                     </div>
 
 
                     <!-- CORREO -->
                     <div class="form-group">
                         <label for="correo">Correo electrónico</label>
-                        <input value="{{correo}}" name="correo" type="email" class="form-control">
+                        <input value="{{correo}}" name="correo" type="email" class="form-control" required>
                     </div>
 
                     <!-- DIRECCION -->
                     <div class="form-group">
                         <label for="direccion">Dirección física de su terminal</label>
-                        <input value="{{direccion}}" name="direccion" type="text" class="form-control">
+                        <input value="{{direccion}}" name="direccion" type="text" class="form-control" required>
                         <small id="help-zona" class="form-text text-muted">Por señas</small>
                     </div>
 
                     <!-- LATITUD -->
                     <div class="form-group">
                         <label for="lat">Latitud</label>
-                        <input value="{{latitud}}" name="latitud" type="text" class="form-control">
+                        <input value="{{latitud}}" name="latitud" type="number" class="form-control" required>
                     </div>
 
                     <!-- LONGITUD -->
                     <div class="form-group">
                         <label for="lon">Longitud</label>
-                        <input value="{{longitud}}" name="longitud" type="text" class="form-control">
+                        <input value="{{longitud}}" name="longitud" type="number" class="form-control" required>
                     </div>
 
                     <!-- HORARIO -->
                     <div class="form-group">
                         <label for="horario">Horario de atención al público</label>
-                        <input value="{{horario}}" name="horario" type="text" class="form-control" aria-describedby="help-horario">
+                        <input value="{{horario}}" name="horario" type="text" class="form-control" aria-describedby="help-horario" required>
                         <small id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, a partir de las 6:00am luego cada 30 minutos hasta las 9:00pm.</small>
                     </div>
 
