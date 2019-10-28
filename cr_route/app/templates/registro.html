@@ -11,31 +11,42 @@
                 <br>
                 <h1 class="text-center">Registrar nuevo usuario colaborador</h1>
                 <br>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-primary" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 <form method="POST" action="{{action}}">
                     <!-- NOMBRE_USUARIO -->
                     <div class="form-group">
-                        <input value="{{nombre_usuario}}" name="nombre_usuario" type="text" class="form-control" placeholder="Nombre de usuario" required>
+                        <label for="nombre_usuario">Nombre de usuario</label>
+                        <input value="{{nombre_usuario}}" name="nombre_usuario" type="text" class="form-control" required>
                     </div>
                     
                     <!-- NOMBRE -->
                     <div class="form-group">
-                        <input value="{{nombre}}" name="nombre" type="text" class="form-control" placeholder="Nombre" pattern="^[a-zA-Z]+$" title="Nombre: Solo letras" required>
+                        <label for="nombre">Nombre</label>
+                        <input value="{{nombre}}" name="nombre" type="text" class="form-control" pattern="^[a-zA-Z]+$" title="Solo letras" required>
                     </div>
 
                     <!-- APELLIDO1 -->
                     <div class="form-group">
-                        <input value="{{apellido1}}" name="apellido1" type="text" class="form-control" placeholder="Primer Apellido" pattern="^[a-zA-Z]+$" title="Primer Apellido: Solo letras" required>
+                        <label for="apellido1">Primer Apellido</label>
+                        <input value="{{apellido1}}" name="apellido1" type="text" class="form-control" pattern="^[a-zA-Z]+$" title="Solo letras" required>
                     </div>
-
 
                     <!-- APELLIDO2 -->
                     <div class="form-group">
-                        <input value="{{apellido2}}" name="apellido2" type="text" class="form-control" placeholder="Segundo Apellido" pattern="^[a-zA-Z]+$" title="Segundo Apellido: Solo letras" required>
+                        <label for="apellido2">Segundo Apellido</label>
+                        <input value="{{apellido2}}" name="apellido2" type="text" class="form-control" pattern="^[a-zA-Z]+$" title="Solo letras" required>
                     </div>
 
                     <!-- CONTRASENA -->
                     <div class="form-group">
-                        <input value="{{contrasena}}" name="contrasena" type="password" class="form-control" placeholder="Contraseña" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Contraseña: Mínimo ocho caracteres, al menos una letra mayúscula, una minúscula, un número y un carácter especial" required>
+                        <label for="contrasena">Contraseña</label>
+                        <input value="{{contrasena}}" name="contrasena" type="password" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Mínimo ocho caracteres, al menos una letra mayúscula, una minúscula, un número y un carácter especial" required>
                     </div>
 
                     <!-- ENVIAR -->

@@ -31,4 +31,5 @@ urlpatterns = [
     path('ruta/borrar/<int:id>/', borrar_ruta, name='borrar_ruta'),
     path('registro/', registro),
     path('iniciar_sesion/', iniciar_sesion),
+    path('', iniciar_sesion),
 ]

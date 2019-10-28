@@ -11,16 +11,14 @@
                 <br>
                 <h1 class="text-center">Bienvenido a la aplicación RutaCR</h1>
                 <br>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-primary" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 <form method="POST" action="{{action}}">
-                    {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <div class="alert alert-primary" role="alert">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
                     <!-- NOMBRE_USUARIO -->
                     <div class="form-group">
                         <input name="nombre_usuario" type="text" class="form-control" placeholder="Nombre de usuario" required>
