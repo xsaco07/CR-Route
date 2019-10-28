@@ -39,8 +39,6 @@ function onMapClick(e) {
     markers.splice(i, 1);
     coordenates.splice(i, 1);
 
-    console.log("After delete: ", markers);
-
     polylines.push(L.polyline(coordenates, {color: 'red'}));
     p_group = L.layerGroup(polylines).addTo(mymap);
 
@@ -49,10 +47,19 @@ function onMapClick(e) {
   markers.push(newMarker);
   coordenates.push([lat, lng]);
 
-  console.log("Pushed: ", markers);
+  console.log("Pushed: ", coordenates);
   polylines.push(L.polyline(coordenates, {color: 'red'}));
   p_group = L.layerGroup(polylines).addTo(mymap);
 
 }
 
 mymap.on('click', onMapClick);
+
+$(document).ready(function() {
+  var submit_button = $('button[type=submit]');
+  submit_button.on('click', function() {
+    var hidden_input = $('#puntos-ruta');
+    hidden_input.val(coordenates,toString());
+    console.log('coordenates loaded');
+  });
+});
