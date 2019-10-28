@@ -30,16 +30,29 @@ def editar_ruta(request, id):
         ruta.duracion = data["duracion"]
         ruta.rampa = data["rampa"]
         ruta.save()
-        return redirect('/ruta/insertar')
+
+        crear_paradas(data, ruta)
+
+        return redirect('/ruta/listar')
+
     elif request.method == "GET":
+
+        paradas = Parada.objects.filter(ruta=ruta).order_by('serial')
+        paradas_coords = []
+
+        for parada in paradas:
+            print(parada.longitud)
+            paradas_coords += [[parada.latitud, parada.longitud]]
+
         context = model_to_dict(ruta)
         context["action"] = "/ruta/editar/"+str(id)+"/"
+        context['paradas'] = paradas_coords
         return render(request, "editar_crear_rutas.html", context=context)
 
 @csrf_exempt
 def insertar_ruta(request):
-    if request.method == "POST":
 
+    if request.method == "POST":
         # Crear nueva Ruta
         data = request.POST
         ruta = Ruta()
@@ -51,30 +64,37 @@ def insertar_ruta(request):
         ruta.rampa = data["rampa"]
         ruta.save()
 
-        # Convert string to list of ints
-        coordenates = data['puntos'].split(',')
-        coordenates = list(map(float, coordenates))
-
-        # Create matrix of points
-        final_coordenates = list(divide_chunks(coordenates, 2))
-        print(final_coordenates)
-
-        # Crear nuevas Paradas
-        serial = 1;
-        for par in final_coordenates:
-            parada = Parada()
-            parada.ruta = ruta
-            parada.serial = serial
-            parada.latitud = par[0]
-            parada.longitud = par[1]
-            parada.save()
-            serial += 1
+        crear_paradas(data, ruta)
 
         return redirect('/ruta/listar')
 
     elif request.method == "GET":
         context = {"action":"/ruta/insertar/"}
         return render(request, "editar_crear_rutas.html", context=context)
+
+def crear_paradas(data, ruta):
+    # Convert string to list of floats
+    coordenates = data['puntos'].split(',')
+    coordenates = list(map(float, coordenates))
+    print("Len puntos coords: ", len(coordenates))
+
+    # Create matrix of points
+    final_coordenates = list(divide_chunks(coordenates, 2))
+    print(data['puntos'])
+
+    # Borrar paradas previamente asociadas
+    Parada.objects.filter(ruta=ruta).delete()
+
+    # Crear nuevas Paradas
+    serial = 1;
+    for par in final_coordenates:
+        parada = Parada()
+        parada.ruta = ruta
+        parada.serial = serial
+        parada.latitud = par[0]
+        parada.longitud = par[1]
+        parada.save()
+        serial += 1
 
 # Divide list in chunks
 def divide_chunks(l, n):
