@@ -16,7 +16,7 @@ def listar_rutas(request):
 
 def borrar_ruta(request, id):
     Ruta.objects.filter(id=id)[0].delete()
-    return listar_rutas(request)
+    return redirect('/ruta/listar')
 
 @csrf_exempt
 def editar_ruta(request, id):
@@ -67,7 +67,7 @@ def insertar_ruta(request):
         crear_paradas(data, ruta)
 
         messages.info(request, 'Ruta creada exitosamente.')
-        return render(request, "admRutas.html")
+        return listar_rutas(request)
 
     elif request.method == "GET":
         context = {"action":"/ruta/insertar/"}
@@ -130,7 +130,6 @@ def editar_empresa(request, id):
         return render(request, "form_empresa.html", context=context)
 
 def listar_empresa(request, meta):
-    print(">>>",meta)
     empresas = Empresa.objects.all()
     if(meta):
         # only return metadata id and name
