@@ -161,8 +161,6 @@ def insertar_empresa(request):
         context = {"action":"/empresa/insertar/"}
         return render(request, "form_empresa.html", context=context)
 
-<<<<<<< HEAD
-=======
 # Form vacío
 def borrar_ruta(request, id):
     Ruta.objects.filter(id=id)[0].delete()
@@ -208,7 +206,6 @@ def insertar_ruta(request):
         context = {"action":"/ruta/insertar/"}
         return render(request, "editar_crear_rutas.html", context=context)
 
->>>>>>> 1af7643e93355076c970ca535db53cfce774de5a
 @csrf_exempt
 def registro(request):
     if request.method == "POST":
