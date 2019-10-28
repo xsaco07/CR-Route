@@ -21,21 +21,18 @@
                 <option>Loading... </option>
         </select>
     </div>
-    <br>
 
     <!-- DESCRIPCION -->
     <div class="form-group">
         <label for="nombre">Descripción</label>
         <input value="{{descripcion}}" name="descripcion" type="text" class="form-control" required>
     </div>
-    <br>
 
     <!-- PRECIO -->
     <div class="form-group">
         <label for="nombre">Costo del pasaje</label>
         <input value="{{precio}}" name="precio" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
     </div>
-    <br>
 
     <!-- HORARIO -->
     <div class="form-group">
@@ -43,7 +40,6 @@
         <input value="{{horario}}" name="horario" type="text" class="form-control" required>
         <small id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, a partir de las 6:00am luego cada 30 minutos hasta las 9:00pm.</small>
     </div>
-    <br>
 
     <!-- DURACION -->
     <div class="form-group">
@@ -51,7 +47,6 @@
         <input value="{{duracion}}" name="duracion" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
         <small id="help-horario" class="form-text text-muted">Aproximado del viaje en minutos. Ej: 60</small>
     </div>
-    <br>
 
     <!-- RAMPA -->
     <div class="form-group">
@@ -64,4 +59,5 @@
 
     <!-- ENVIAR -->
     <button type="submit" class="btn btn-success" style="padding: 5px 50px; font-size: 18px;">Listo</button>
+    <br><br><br>
 </form>
