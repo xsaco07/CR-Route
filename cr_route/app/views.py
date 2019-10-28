@@ -66,7 +66,8 @@ def insertar_ruta(request):
 
         crear_paradas(data, ruta)
 
-        return redirect('/ruta/listar')
+        messages.info(request, 'Ruta creada exitosamente.')
+        return render(request, "admRutas.html")
 
     elif request.method == "GET":
         context = {"action":"/ruta/insertar/"}
@@ -130,10 +131,16 @@ def editar_empresa(request, id):
         context["action"] = "/empresa/editar/"+str(id)+"/"
         return render(request, "form_empresa.html", context=context)
 
-def listar_empresa(request):
+def listar_empresa(request, meta):
+    print(">>>",meta)
     empresas = Empresa.objects.all()
-    context = {"empresas":empresas}
-    return render(request, 'admEmpresas.html', context=context)
+    if(meta):
+        # only return metadata id and name
+        return render(request,"combo_options.html",{"empresas":empresas})
+    else:
+        context = {"empresas":empresas}
+        return render(request, 'admEmpresas.html', context=context)
+
 
 @csrf_exempt
 def insertar_empresa(request):
@@ -154,6 +161,54 @@ def insertar_empresa(request):
         context = {"action":"/empresa/insertar/"}
         return render(request, "form_empresa.html", context=context)
 
+<<<<<<< HEAD
+=======
+# Form vacío
+def borrar_ruta(request, id):
+    Ruta.objects.filter(id=id)[0].delete()
+    return redirect('/inicio/')
+
+@csrf_exempt
+def editar_ruta(request, id):
+    ruta = Ruta.objects.filter(id=id)[0]
+    if request.method == "POST":
+        data = request.POST
+        ruta.empresa = Empresa.objects.last()
+        ruta.descripcion = data["descripcion"]
+        ruta.precio = data["precio"]
+        ruta.horario = data["horario"]
+        ruta.duracion = data["duracion"]
+        ruta.rampa = data["rampa"]
+        ruta.save()
+        return redirect('/inicio/')
+    elif request.method == "GET":
+        context = ruta.__dict__
+        context["action"] = "/ruta/editar/"+str(id)+"/"
+        return render(request, "form_ruta.html", context=context)
+
+
+def listar_rutas(request):
+    return render(request, 'admRutas.html')
+
+@csrf_exempt
+def insertar_ruta(request):
+    if request.method == "POST":
+        data = request.POST
+        ruta = Ruta()
+        ruta.empresa = Empresa.objects.last()
+        ruta.descripcion = data["descripcion"]
+        ruta.precio = data["precio"]
+        ruta.horario = data["horario"]
+        ruta.duracion = data["duracion"]
+        ruta.rampa = data["rampa"]
+        ruta.save()
+        messages.info(request, 'Ruta creada exitosamente.')
+        return render(request, "admRutas.html")
+    elif request.method == "GET":
+        context = {"action":"/ruta/insertar/"}
+        return render(request, "editar_crear_rutas.html", context=context)
+
+>>>>>>> 1af7643e93355076c970ca535db53cfce774de5a
 @csrf_exempt
 def registro(request):
     if request.method == "POST":
@@ -164,8 +219,15 @@ def registro(request):
         usuario.apellido1 = data["apellido1"]
         usuario.apellido2 = data["apellido2"]
         usuario.contrasena = data["contrasena"]
-        usuario.save()
-        return redirect('/iniciar_sesion/')
+        try:
+            usuario = Usuario.objects.filter(nombre_usuario=usuario.nombre_usuario)[0]
+            if usuario.nombre_usuario == data["nombre_usuario"]:
+                messages.info(request, 'Nombre de usuario ya existente, intente con otro diferente.')
+                return render(request, "registro.html")
+        except:
+            usuario.save()
+            messages.info(request, 'Usuario creado exitosamente.')
+            return render(request, "iniciar_sesion.html")
     elif request.method == "GET":
         context = {"action": "/registro/"}
         return render(request, "registro.html", context=context)
@@ -180,10 +242,10 @@ def iniciar_sesion(request):
             usuario = Usuario.objects.filter(nombre_usuario=nombre_usuario)[0]
             if usuario.nombre_usuario == nombre_usuario and usuario.contrasena == contrasena:
                 return redirect('/inicio/')
-            messages.info(request, 'Nombre de usuario o contraseña incorrecta!')
+            messages.info(request, 'El nombre de usuario o contraseña que has introducido es incorrecta')
             return render(request, "iniciar_sesion.html")
         except:
-            messages.info(request, 'Nombre de usuario o contraseña incorrecta!')
+            messages.info(request, 'El nombre de usuario o contraseña que has introducido es incorrecta')
             return render(request, "iniciar_sesion.html")
 
     elif request.method == "GET":

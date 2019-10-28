@@ -9,7 +9,13 @@
 
     <link rel="stylesheet" href="{% static 'css/admRutas.css' %}">
     <script src="{% static 'js/admRutas.js' %}" charset="utf-8"></script>
-
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-primary" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="container mt-5">
 
         <div class="row">
