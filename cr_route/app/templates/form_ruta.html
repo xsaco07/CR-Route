@@ -1,7 +1,24 @@
 <form method="POST" action="{{action}}" id="ruta-form">
     <!-- EMPRESA -->
+
+    <!-- SCRIPT PARA CARGAR EL COMBO, OCUPA JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+        var selectElementID = "#empresa";
+        $(document).ready(function(){
+            $.ajax({
+                url:"/empresa/listar/meta/"
+            }).done(function(response){
+                $(selectElementID).html(response);
+            });
+        });
+    </script>
+
+    <!-- COMBO DE EMPRESA -->
     <div class="form-group">
-        <input disabled value="{{empresa}}" name="empresa" type="text" class="form-control" required placeholder="Empresa">
+        <select id="empresa" value="" name="id_empresa" class="form-control" required>
+                <option>Loading... </option>
+        </select>
     </div>
     <br>
 

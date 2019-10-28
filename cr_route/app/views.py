@@ -82,10 +82,16 @@ def editar_empresa(request, id):
         context["action"] = "/empresa/editar/"+str(id)+"/"
         return render(request, "form_empresa.html", context=context)
 
-def listar_empresa(request):
+def listar_empresa(request, meta):
+    print(">>>",meta)
     empresas = Empresa.objects.all()
-    context = {"empresas":empresas}
-    return render(request, 'admEmpresas.html', context=context)
+    if(meta):
+        # only return metadata id and name 
+        return render(request,"combo_options.html",{"empresas":empresas})
+    else:
+        context = {"empresas":empresas}
+        return render(request, 'admEmpresas.html', context=context)
+
 
 @csrf_exempt
 def insertar_empresa(request):
