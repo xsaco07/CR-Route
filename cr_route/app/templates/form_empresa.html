@@ -20,19 +20,19 @@
                         <label for="nombre">Nombre</label>
                         <input required value="{{nombre}}" name="nombre" type="text" class="form-control">
                     </div>
-                    
+
                     <!-- ZONA -->
                     <div class="form-group">
                         <label for="zona">Zona</label>
-                        <input required value="{{zona}}" name="zona" type="text" class="form-control" aria-describedby="help-zona"> 
-                        <small id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa (sitio origen y destino)</small>
+                        <input required value="{{zona}}" name="zona" type="text" class="form-control" aria-describedby="help-zona">
+                        <small id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa (sitio origen, transucurso y destino)</small>
                         <small id="help-zona" class="form-text text-muted">Ej: Alajuela - San José</small>
                     </div>
 
                     <!-- TELEFONO -->
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input required value="{{telefono}}" name="telefono" type="number" class="form-control"> 
+                        <input required value="{{telefono}}" name="telefono" type="number" class="form-control">
                     </div>
 
 
@@ -50,10 +50,11 @@
                     </div>
 
                     <!-- MAPA -->
+                    <label for="map">Coloque la ubicación de la empresa en el mapa dándole click</label>
                     <div id="map" style="width: 600px; height: 400px;"></div>
 
                     <!-- LATITUD -->
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <label for="lat">Latitud</label>
                         <input required value="{{latitud}}" id="lat" name="latitud" type="text" class="form-control">
                     </div>
@@ -80,15 +81,15 @@
                 <script>
                     var latInput = $("#lat");
                     var lonInput = $("#lon");
-                    
-                    var initLocation = [51.505, -0.09];
+
+                    var initLocation = [10.004, -84.098];
                     if(latInput.val() && lonInput.val()){
                         initLocation = [
                             parseFloat(latInput.val()),
                             parseFloat(lonInput.val()),
                         ]
                     }
-                    
+
                     var mymap = L.map('map').setView(initLocation, 13);
                     var marker = L.marker(initLocation).addTo(mymap);
 
@@ -112,5 +113,5 @@
         </div>
     </div>
 
-    
+
 {% endblock mainContent %}

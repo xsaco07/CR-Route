@@ -5,9 +5,9 @@
 {% endblock title %}
 
 {% block mainContent %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-8 text-center">
                 <br>
                 <h1 class="text-center">Registrar nuevo usuario colaborador</h1>
                 <br>
@@ -24,7 +24,7 @@
                         <label for="nombre_usuario">Nombre de usuario</label>
                         <input value="{{nombre_usuario}}" name="nombre_usuario" type="text" class="form-control" required>
                     </div>
-                    
+
                     <!-- NOMBRE -->
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
@@ -46,7 +46,7 @@
                     <!-- CONTRASENA -->
                     <div class="form-group">
                         <label for="contrasena">Contraseña</label>
-                        <input value="{{contrasena}}" name="contrasena" type="password" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Mínimo ocho caracteres, al menos una letra mayúscula, una minúscula, un número y un carácter especial" required>
+                        <input value="{{contrasena}}" name="contrasena" type="password" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Mínimo ocho caracteres, al menos una letra mayúscula, una minúscula, un número y un carácter especial." required>
                     </div>
 
                     <!-- ENVIAR -->
@@ -57,5 +57,5 @@
         </div>
     </div>
 
-    
+
 {% endblock mainContent %}
