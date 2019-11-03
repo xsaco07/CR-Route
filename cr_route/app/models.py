@@ -11,6 +11,7 @@ class Empresa(models.Model):
     horario = models.TextField()
 
 class Ruta(models.Model):
+    numero_ruta = models.IntegerField()
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=200)
     precio = models.IntegerField()

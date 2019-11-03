@@ -1,17 +1,19 @@
-  
+
 <div class="card bg-light border-dark" style="max-width: 18rem; margin:20px;">
-    {% if empresa == None %}
+    {% if empresa == None and session_key%}
         <div class="card-header">
             <h5 class="card-title">
                 ¿Te gustaría contribuir?
-            </h3>
+            </h5>
         </div>
         <div class="card-body">
             <a class="btn btn-success" href="/empresa/insertar/">Agregar nueva empresa</a>
         </div>        
     {% else %}
+        {% if empresa.nombre == None %}
+        {% else %}
         <div class="card-header">
-            <h3 class="card-title">{{empresa.nombre}}</h1>
+            <h3 class="card-title">{{empresa.nombre}}</h3>
             <small> Zona: {{empresa.zona}} </small><br>
             <small> Teléfono: {{empresa.telefono}}</small><br>
             <small> Horario: {{empresa.horario}}</small><br>
@@ -22,8 +24,11 @@
         <div class="card-body">
             <!-- <a class="btn btn-info" href="">Más información</a> -->
             <!-- <br> -->
+            {% if session_key %}
             <a class="interact-button" href="/empresa/editar/{{empresa.id}}"><i class="fas fa-pencil-alt"></i></a>
             <a class="interact-button" href="/empresa/borrar/{{empresa.id}}#"><i class="fas fa-trash-alt"></i></a>
-        </div>           
+            {% endif %}
+        </div>
+        {% endif %}
     {% endif %}
 </div>
