@@ -16,9 +16,15 @@
         });
     </script>
 
+        <!-- NUMERO DE RUTA -->
+    <div class="form-group">
+        <label for="numero_ruta">Número de ruta</label>
+        <input value="{{numero_ruta}}" name="numero_ruta" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números" required>
+    </div>
+
     <!-- COMBO DE EMPRESA -->
     <div class="form-group">
-        <label for="nombre">Empresa</label>
+        <label for="empresa">Empresa</label>
         <select id="empresa" value="" name="id_empresa" class="form-control" required>
                 <option>Loading... </option>
         </select>
@@ -26,26 +32,26 @@
 
     <!-- DESCRIPCION -->
     <div class="form-group">
-        <label for="nombre">Descripción</label>
+        <label for="descripcion">Descripción</label>
         <input value="{{descripcion}}" name="descripcion" type="text" class="form-control" required>
     </div>
 
     <!-- PRECIO -->
     <div class="form-group">
-        <label for="nombre">Costo del pasaje</label>
+        <label for="precio">Costo del pasaje</label>
         <input value="{{precio}}" name="precio" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
     </div>
 
     <!-- HORARIO -->
     <div class="form-group">
-        <label for="nombre">Horario de servicio</label>
+        <label for="horario">Horario de servicio</label>
         <input value="{{horario}}" name="horario" type="text" class="form-control" required>
         <small id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, a partir de las 6:00am luego cada 30 minutos hasta las 9:00pm.</small>
     </div>
 
     <!-- DURACION -->
     <div class="form-group">
-        <label for="nombre">Duración</label>
+        <label for="duracion">Duración</label>
         <input value="{{duracion}}" name="duracion" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
         <small id="help-horario" class="form-text text-muted">Aproximado del viaje en minutos. Ej: 60</small>
     </div>

@@ -8,7 +8,8 @@ from django.forms.models import model_to_dict
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html')
+    context = {"usuario" : "Sin usuario"}
+    return render(request, 'home.html', context=context)
 
 def listar_rutas(request):
     rutas = Ruta.objects.all()
@@ -57,6 +58,7 @@ def insertar_ruta(request):
         data = request.POST
         ruta = Ruta()
         ruta.empresa = Empresa.objects.last()
+        ruta.numero_ruta = data["numero_ruta"]
         ruta.descripcion = data["descripcion"]
         ruta.precio = data["precio"]
         ruta.horario = data["horario"]
@@ -159,7 +161,7 @@ def insertar_empresa(request):
         return render(request, "form_empresa.html", context=context)
 
 @csrf_exempt
-def registro(request):
+def registrar_usuario(request):
     if request.method == "POST":
         data = request.POST
         usuario = Usuario()
@@ -171,15 +173,17 @@ def registro(request):
         try:
             usuario = Usuario.objects.filter(nombre_usuario=usuario.nombre_usuario)[0]
             if usuario.nombre_usuario == data["nombre_usuario"]:
-                messages.info(request, 'Nombre de usuario ya existente, intente con otro diferente.')
-                return render(request, "registro.html")
+                context = {"mensaje": "Nombre de usuario ya existente, intente con otro diferente."}
+                context["titulo"] = "Nombre usuario"
+                return render(request, "registrar_usuario.html", context=context)
         except:
             usuario.save()
-            messages.info(request, 'Usuario creado exitosamente.')
-            return render(request, "iniciar_sesion.html")
+            context = {"mensaje": 'Usuario creado exitosamente.'}
+            return render(request, "iniciar_sesion.html", context=context)
     elif request.method == "GET":
         context = {"action": "/registro/"}
-        return render(request, "registro.html", context=context)
+        context["titulo"] = "Nombre usuario"
+        return render(request, "registrar_usuario.html", context=context)
 
 @csrf_exempt
 def iniciar_sesion(request):
@@ -190,12 +194,38 @@ def iniciar_sesion(request):
         try:
             usuario = Usuario.objects.filter(nombre_usuario=nombre_usuario)[0]
             if usuario.nombre_usuario == nombre_usuario and usuario.contrasena == contrasena:
-                return redirect('/inicio/')
-            messages.info(request, 'El nombre de usuario o contraseña que has introducido es incorrecta')
-            return render(request, "iniciar_sesion.html")
+                context = {"usuario": "Con usuario"}
+                context["id"] = usuario.id
+                return render(request, "home.html", context=context)
+            context = {"mensaje": 'El nombre de usuario o contraseña que has introducido es incorrecta'}
+            return render(request, "iniciar_sesion.html", context=context)
         except:
-            messages.info(request, 'El nombre de usuario o contraseña que has introducido es incorrecta')
-            return render(request, "iniciar_sesion.html")
+            context = {"mensaje": 'El nombre de usuario o contraseña que has introducido es incorrecta'}
+            return render(request, "iniciar_sesion.html", context=context)
 
     elif request.method == "GET":
         return render(request, "iniciar_sesion.html")
+
+@csrf_exempt
+def editar_usuario(request, id):
+    usuario = Usuario.objects.filter(id=id)[0]
+    if request.method == "POST":
+        data = request.POST
+        usuario.nombre = data["nombre"]
+        usuario.apellido1 = data["apellido1"]
+        usuario.apellido2 = data["apellido2"]
+        usuario.contrasena = data["contrasena"]
+        usuario.save()
+        context = {"mensaje": 'Usuario editado exitosamente'}
+        return render(request,"iniciar_sesion.html", context=context)
+    elif request.method == "GET":
+        context = model_to_dict(usuario)
+        context["action"] = "/usuario/editar/"+str(id)+"/"
+        context["titulo"] = "Editar usuario"
+        return render(request, "registrar_usuario.html", context=context)
+
+@csrf_exempt
+def borrar_usuario(request, id):
+    Usuario.objects.filter(id=id)[0].delete()
+    context = {"mensaje": 'Usuario borrado correctamente.'}
+    return render(request,"iniciar_sesion.html", context=context)

@@ -20,6 +20,16 @@
           <li class="nav-item">
             <a href="#" class="nav-link">Acerca del proyecto</a>
           </li>
+          {% if usuario == "Sin usuario" %}
+          <li class="nav-item">
+            <a href="/login" class="nav-link">Iniciar sesión</a>
+          </li>
+          {% endif %}
+          {% if usuario == "Con usuario" %}
+          <li class="nav-item">
+            <a href="/usuario/editar/{{id}}" class="nav-link">Perfil</a>
+          </li>
+          {% endif %}
         </ul>
       </div>
       <span class="navbar-text">

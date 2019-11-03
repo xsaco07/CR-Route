@@ -32,7 +32,7 @@
                     <!-- TELEFONO -->
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input required value="{{telefono}}" name="telefono" type="number" class="form-control"> 
+                        <input required value="{{telefono}}" name="telefono" type="text" class="form-control" pattern="\d*" required maxlength="8" title="Solo números">
                     </div>
 
 
@@ -81,7 +81,7 @@
                     var latInput = $("#lat");
                     var lonInput = $("#lon");
                     
-                    var initLocation = [51.505, -0.09];
+                    var initLocation = [9.934009837107048, -84.08452481031419];
                     if(latInput.val() && lonInput.val()){
                         initLocation = [
                             parseFloat(latInput.val()),
