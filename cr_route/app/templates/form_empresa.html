@@ -6,8 +6,8 @@
 
 {% block mainContent %}
     <div class="container">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
+        <div class="row justify-content-center">
+            <div class="col-8 text-center">
                 <h1 class="text-center" style="padding: 25px;">Formulario Empresa</h1>
                 {% if info_message %}
                     <div class="alert alert-success" role="alert">
@@ -50,8 +50,10 @@
                     </div>
 
                     <!-- MAPA -->
-                    <label for="map">Coloque la ubicación de la empresa en el mapa dándole click</label>
-                    <div id="map" style="width: 600px; height: 400px;"></div>
+                    <div class="form-group">
+                      <label for="map">Coloque la ubicación de la empresa en el mapa dándole click</label>
+                      <div id="map" style="width: 100%; height: 500px; border: solid 2px red; border-radius: 20px;"></div>
+                    </div>
 
                     <!-- LATITUD -->
                     <div class="form-group mt-2">
@@ -73,7 +75,7 @@
                     </div>
 
                     <!-- ENVIAR -->
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Listo</button>
                 </form>
 
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
