@@ -8,21 +8,29 @@
     <div class="container mb-5">
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <br>
-                <h1 class="text-center">Registrar nuevo usuario colaborador</h1>
-                <br>
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-primary" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
+                {% if titulo == "Editar usuario" %}
+                    <br>
+                    <h1 class="text-center">Editar usuario colaborador</h1>
+                    <br>
+                {% else %}
+                    <br>
+                    <h1 class="text-center">Registrar nuevo usuario colaborador</h1>
+                    <br>
+                {% endif %}
+                {% if mensaje %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ mensaje }}
+                    </div>
                 {% endif %}
                 <form method="POST" action="{{action}}">
                     <!-- NOMBRE_USUARIO -->
                     <div class="form-group">
                         <label for="nombre_usuario">Nombre de usuario</label>
-                        <input value="{{nombre_usuario}}" name="nombre_usuario" type="text" class="form-control" required>
+                        {% if titulo == "Editar usuario"  %}
+                            <input value="{{nombre_usuario}}" name="nombre_usuario" type="text" class="form-control" disabled>
+                        {% else %}
+                            <input name="nombre_usuario" type="text" class="form-control" required>
+                        {% endif %}
                     </div>
 
                     <!-- NOMBRE -->
@@ -46,11 +54,16 @@
                     <!-- CONTRASENA -->
                     <div class="form-group">
                         <label for="contrasena">Contraseña</label>
-                        <input value="{{contrasena}}" name="contrasena" type="password" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Mínimo ocho caracteres, al menos una letra mayúscula, una minúscula, un número y un carácter especial." required>
+                        <input name="contrasena" type="password" class="form-control" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Mínimo ocho caracteres, al menos una letra mayúscula, una minúscula, un número y un carácter especial." required>
                     </div>
 
                     <!-- ENVIAR -->
                     <button type="submit" class="btn btn-primary">Registrarse</button>
+                    {% if titulo != "Nombre usuario"  %}
+                        <div class="form-group" align="right">
+                        <a href="/usuario/borrar/{{id}}#">Eliminar mi cuenta permanentemente</a>
+                        </div>
+                    {% endif %}
                 </form>
 
             </div>

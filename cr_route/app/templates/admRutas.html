@@ -21,7 +21,7 @@
     <div class="container mt-5">
 
         <div class="row">
-
+            {% if session_key %}
           <div class="col-3 text-center">
             <div class="card border-light">
                 <div class="card-body">
@@ -34,6 +34,7 @@
                 </div>
             </div>
           </div>
+            {% endif %}
 
           {% for ruta in rutas %}
 
@@ -49,6 +50,7 @@
                   {# More info collapse #}
                   <div class="collapse" id="info-collapse{{ruta.id}}">
                     <ul class="list-group list-group-flush mb-4">
+                      <li class="list-group-item">Número de ruta: {{ruta.numero_ruta}}</li>
                       <li class="list-group-item">Precio: {{ruta.precio}} colones</li>
                       <li class="list-group-item">Horario: {{ruta.horario}}</li>
                       <li class="list-group-item">Duración promedio: {{ruta.duracion}} minutos</li>
@@ -70,10 +72,10 @@
 
                   <br>
                   <br>
-
+                    {% if session_key %}
                   <a class="interact-button" href="{% url 'editar_ruta' id=ruta.id %}"><i class="fas fa-pencil-alt"></i></a>
                   <a class="interact-button" href="{% url 'borrar_ruta' id=ruta.id %}"><i class="fas fa-trash-alt"></i></a>
-
+                    {% endif %}
                 </div>
 
                 <div class="card-footer">
