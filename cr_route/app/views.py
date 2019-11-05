@@ -287,13 +287,66 @@ def salir_sesion(request):
 
 
 '''
+    Retornar una lista con los puntos de una ruta por id
+'''
+def puntos_de_ruta(id_ruta):
+    # Conseguir los puntos de la ruta ordenados por el serial 
+    registros_puntos = Parada.objects.filter(ruta_id=id_ruta).order_by("serial")
+    puntos = []
+    for punto in registros_puntos:
+        puntos.append({
+            "serial":punto.serial,
+            "lat":punto.latitud,
+            "lon":punto.longitud
+        })
+    return puntos
+
+
+'''
     Retornar todas las rutas de una empresa serializadas a JSON
 '''
 def api_rutas_por_empresa(request, id):
     # Buscar todas las rutas por empresa 
-    rutas = Ruta.objects.select_related('empresa').filter(empresa_id=id)
+    registros_rutas = Ruta.objects.select_related('empresa').filter(empresa_id=id)
     
-    response = {}
-    response["nombres"] = [rutas[0].descripcion]
+    # Lista de objetos JSON de rutas
+    rutas = []
 
+    for registro in registros_rutas:
+        # Conseguir los puntos de la ruta
+        puntos = puntos_de_ruta(registro.id)
+        
+        # Llenar nuevo objeto json con datos
+        obj = {
+            "numero_ruta" : registro.numero_ruta,
+            "nombre_empresa" : registro.empresa.nombre,
+            "descripcion" : registro.descripcion,
+            "precio" : registro.precio,
+            "horario" : registro.horario,
+            "duracion" : registro.duracion,
+            "rampa" : registro.rampa,
+            "puntos" : puntos
+        }
+
+        # Agregarlo a la lista 
+        rutas.append(obj)
+
+    response = {"rutas":rutas}
+    
+    return HttpResponse(json.dumps(response))
+
+
+'''
+    Retornar los puntos de una ruta serializadas a JSON
+'''
+def api_puntos_por_num_ruta(request, num_ruta):
+    
+    # Buscar ruta por el su numero
+    ruta = Ruta.objects.filter(numero_ruta=num_ruta)[0]
+
+    # Obtener los puntos usando el id 
+    puntos = puntos_de_ruta(ruta.id)
+
+    response = {"puntos":puntos}
+    
     return HttpResponse(json.dumps(response))

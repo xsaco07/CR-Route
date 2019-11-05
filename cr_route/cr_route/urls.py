@@ -35,5 +35,6 @@ urlpatterns = [
     path('login/', iniciar_sesion),
     path('logout/', salir_sesion),
     path('api/rutas_por_empresa/<int:id>/', api_rutas_por_empresa),
+    path('api/ruta_por_numero/<int:num_ruta>/', api_puntos_por_num_ruta),
     path('', home),
 ]
