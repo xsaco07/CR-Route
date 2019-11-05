@@ -282,3 +282,7 @@ def borrar_usuario(request, id):
 def salir_sesion(request):
     request.session.flush()
     return redirect("/login/")
+
+
+def contacto(request):
+    return render(request, "contacto.html");

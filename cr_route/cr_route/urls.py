@@ -34,5 +34,6 @@ urlpatterns = [
     path('usuario/borrar/<int:id>/', borrar_usuario),
     path('login/', iniciar_sesion),
     path('logout/', salir_sesion),
+    path('contacto/', contacto),
     path('', home),
 ]
