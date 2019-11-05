@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from app.models import *
+import json 
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 
@@ -282,3 +283,17 @@ def borrar_usuario(request, id):
 def salir_sesion(request):
     request.session.flush()
     return redirect("/login/")
+
+
+
+'''
+    Retornar todas las rutas de una empresa serializadas a JSON
+'''
+def api_rutas_por_empresa(request, id):
+    # Buscar todas las rutas por empresa 
+    rutas = Ruta.objects.select_related('empresa').filter(empresa_id=id)
+    
+    response = {}
+    response["nombres"] = [rutas[0].descripcion]
+
+    return HttpResponse(json.dumps(response))
