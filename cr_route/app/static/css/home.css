@@ -5,30 +5,53 @@ img{
     height: 80%;
 }
 
-#eslogan {
+.eslogan {
   font-size: 58px;
   color: white;
   font-family: 'Karla', sans-serif;
   margin-top: 1.5em;
+  opacity: 0.9;
+  /*background-image: linear-gradient(to right, #0b7c00, #0a8700, #089301, #059f02, #00ab03); */
 }
 
-#subtitle {
+.subtitle {
+  padding: 2%;
+  /* background-color: #CD001B; */
+  background-image: linear-gradient(to left, #360101, #53000a, #72000d, #92000a, #b10000);
+  opacity: 0.8;
   font-size: 48px;
   color: white;
   font-family: 'Karla', sans-serif;
 }
 
-#text {
+.text {
   font-size: 24px;
+  padding: 3%;
   color: white;
-  font-style: italic;
-  opacity: 0.5;
+  opacity: 0.9;
   font-family: 'Acme', sans-serif;
-  background-color: black;
-  border-radius: 10px;
+  background-image: linear-gradient(to left, #0b7c00, #0a8700, #089301, #059f02, #00ab03);
+  border-radius: 5px;
+}
+
+#osm-logo {
+  width: 30%;
+  height: 300px;
+}
+
+#road {
+  width: 30%;
+  height: 300px;
+}
+
+#marker {
+  width: 30%;
+  height: 300px;
 }
 
 body {
-  background-image: url('https://hw2.thisamericanlife.org/sites/default/files/styles/landscape/public/episodes/images/102.jpg?itok=Fqseb0aw');
+  background-image: url("https://weirdomatic.com/wp-content/pictures/2019/08/8f63b7f1d8fe332b7ede296fe552ed82.jpeg");
   background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
 }

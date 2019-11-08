@@ -9,32 +9,40 @@
 
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
+    <script>
+      new WOW().init();
+    </script>
+
     <div class="container">
       <div class="row">
         <div class="col-12 text-left">
-          <h1 id="eslogan">Título/Eslogan</h2>
-          <h4 id="subtitle">Subtítulo</h4>
+          <h1 class="eslogan wow animated fadeInRight slow">Ruta CR ahora</h2>
+          <h4 class="subtitle wow animated rollIn slow">No pierda más horas encontrando cómo llegar.</h4>
+          <img id="road" class="mt-5 animated fadeInLeft slow" src="{% static "images/road2.png" %}">
         </div>
       </div>
       <div class="row">
-        <div class="col-12 text-left">
-          <h1 id="eslogan">Título/Eslogan</h2>
-          <h4 id="subtitle">Subtítulo</h4>
+        <div class="col-12 text-right">
+          <h1 class="eslogan wow animated fadeInLeft slow">Cualquier ruta a su alcance</h2>
+          <h4 class="subtitle wow animated rotateInDownRight slow">Comunidad activa colaborando para mejorar su travesía</h4>
+          {# <img id="marker" class="wow animated rotateInDownLeft delay-1s" src="{% static "images/marker3.png" %}"> #}
         </div>
       </div>
-      <div class="row mt-5 justify-content-center">
-        <div class="col-10 text-center">
-          <p id="text">Aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          <h4 class="eslogan">¿Qué puedo hacer en la página RutasCR?</h4>
+          <p class="text wow animated slideInLeft slow">Funciona como un panel de control donde existen colaboradores que
+                          facilitan la generación de información actualizada sobre rutas de servicios de transporte público, en
+                          particular, rutas de autobús, en determinada zona geográfica.</p>
         </div>
       </div>
-      <div class="row mt-5 justify-content-center">
-        <div class="col-10 text-center">
-          <p id="text">Aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
-      </div>
-      <div class="row mt-5 justify-content-center">
-        <div class="col-10 text-center">
-          <p id="text">Aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          <h4 class="eslogan">Información geográfica libre y gratuita</h4>
+          <br>
+          <img id="osm-logo" class="wow animated fadeIn slow" src="{% static "images/osm.svg.png" %}">
+          <p class="text wow animated slideInLeft slow">Este proyecto utiliza como base de datos la más grande en
+                          cuanto a información geográfica libre se refiere: <strong>Open Street Map.</strong></p>
         </div>
       </div>
     </div>
