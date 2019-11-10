@@ -288,6 +288,7 @@ def salir_sesion(request):
 
 '''
     Retornar una lista con los puntos de una ruta por id
+    Se retornan como una lista de diccionarios para que los pasen a JSON luego
 '''
 def puntos_de_ruta(id_ruta):
     # Conseguir los puntos de la ruta ordenados por el serial 
@@ -350,3 +351,51 @@ def api_puntos_por_num_ruta(request, num_ruta):
     response = {"puntos":puntos}
     
     return HttpResponse(json.dumps(response))
+
+'''
+    Retorna si punto_eval está dentro del rectángulo marcado por 
+    los dos puntos de referencia
+    - Cada punto es una tupla (lat,lon)
+'''
+def esta_contenido(punto_ref1, punto_ref2, punto_eval):
+    LAT = 0  #nombres para los indices en las tuplas
+    LON = 1
+
+    # Obtener la maxima longitud (Y)
+    max_lon = max((punto_ref1[LON], punto_ref2[LON]))
+
+    # Obtener la minima longitud (Y)
+    min_lon = min((punto_ref1[LON], punto_ref2[LON]))
+
+    # Obtener la maxima latitud (X)
+    max_lat = max((punto_ref1[LAT], punto_ref2[LAT]))
+
+    # Obtener la minima latitud (X)
+    min_lat = min((punto_ref1[LAT], punto_ref2[LAT]))
+
+
+    # print(f"minLat {min_lat}")
+    # print(f"maxLat {max_lat}")
+    # print(f"minLon {min_lon}")
+    # print(f"maxLon {max_lon}")
+
+    # Validar en rango 
+    return (min_lat <= punto_eval[LAT] <= max_lat) and \
+        (min_lon <= punto_eval[LON] <= max_lon)
+
+
+'''
+    Retornar las rutas que tienen destino final dentro de un rectangulo 
+'''
+def api_api_rutas_dentro(request, lat1, lon1, lat2, lon2):
+    # Parsear los parametros a floats 
+    (lat1,lon1,lat2,lon2) = map(lambda x:float(x), (lat1,lon1,lat2,lon2))
+
+    # Obtener las ultimas paradas de las rutas
+    destinos = Parada.objects.filter(es_parada=True).order_by("-serial")[0]
+
+    # Filtrar las que quedan dentro los rangos de búsqueda
+    destinos.filter()
+    
+    return HttpResponse("foo")
+
