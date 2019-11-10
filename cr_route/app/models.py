@@ -19,11 +19,13 @@ class Ruta(models.Model):
     duracion = models.IntegerField()
     rampa = models.BooleanField()
 
-class Parada(models.Model):
+class Punto(models.Model):
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
     serial = models.IntegerField()
     latitud = models.FloatField()
     longitud = models.FloatField()
+    esParada = models.BooleanField()
+    descripcion = models.CharField(max_length=100)
 
 class Usuario(models.Model):
     nombre_usuario = models.CharField(max_length=30)
