@@ -297,7 +297,7 @@ def contacto(request):
 '''
 def puntos_de_ruta(id_ruta):
     # Conseguir los puntos de la ruta ordenados por el serial 
-    registros_puntos = Parada.objects.filter(ruta_id=id_ruta).order_by("serial")
+    registros_puntos = Punto.objects.filter(ruta_id=id_ruta).order_by("serial")
     puntos = []
     for punto in registros_puntos:
         puntos.append({
@@ -389,14 +389,50 @@ def esta_contenido(punto_ref1, punto_ref2, punto_eval):
 '''
     Retornar las rutas que tienen destino final dentro de un rectangulo 
 '''
-def api_api_rutas_dentro(request, lat1, lon1, lat2, lon2):
-    # Parsear los parametros a floats 
-    (lat1,lon1,lat2,lon2) = map(lambda x:float(x), (lat1,lon1,lat2,lon2))
+def api_rutas_dentro(request, lat1, lon1, lat2, lon2):
+    # Parsear los parametros a floats
+    (lat1, lon1, lat2, lon2) = map(lambda x: float(x), (lat1, lon1, lat2, lon2))
+
+    # Conseguir los rangos de latitud y longitud del area especificada
+    ref1 = (lat1, lon1)
+    ref2 = (lat2, lon2)
 
     # Obtener las ultimas paradas de las rutas
-    destinos = Parada.objects.filter(es_parada=True).order_by("-serial")[0]
+    destinos = Punto.objects.raw(
+        "select *, max(serial) from app_punto group by ruta_id;")
+
+    ids_rutas = []
 
     # Filtrar las que quedan dentro los rangos de búsqueda
-    destinos.filter()
-    
-    return HttpResponse("foo")
+    for dest in destinos:
+        if(esta_contenido(ref1, ref2, (dest.latitud, dest.longitud))):
+            ids_rutas.append(dest.ruta.id)
+
+    rutas = []
+    for id in ids_rutas:
+        rutas.append(ruta_a_dicc(id))
+
+    return HttpResponse(json.dumps({"rutas":rutas}))
+
+
+'''
+    Dado un id de ruta retornar un diccionario con todos los atributos simples
+    de la ruta, sus puntos y el nombre de la empresa 
+'''
+def ruta_a_dicc(id_ruta):
+    registro = Ruta.objects.filter(id=id_ruta)[0]
+
+    # Conseguir los puntos de la ruta
+    puntos = puntos_de_ruta(registro.id)
+
+    # Llenar nuevo objeto json con datos
+    return {
+        "numero_ruta": registro.numero_ruta,
+        "nombre_empresa": registro.empresa.nombre,
+        "descripcion": registro.descripcion,
+        "precio": registro.precio,
+        "horario": registro.horario,
+        "duracion": registro.duracion,
+        "rampa": registro.rampa,
+        "puntos": puntos
+    }
