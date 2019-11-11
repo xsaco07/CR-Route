@@ -1,34 +1,53 @@
+{% if empresa == None %}
 
-<div class="card bg-light border-dark" style="max-width: 18rem; margin:20px;">
-    {% if empresa == None and session_key%}
-        <div class="card-header">
-            <h5 class="card-title">
-                ¿Te gustaría contribuir?
-            </h5>
-        </div>
-        <div class="card-body">
-            <a class="btn btn-success" href="/empresa/insertar/">Agregar nueva empresa</a>
-        </div>        
-    {% else %}
-        {% if empresa.nombre == None %}
-        {% else %}
-        <div class="card-header">
-            <h3 class="card-title">{{empresa.nombre}}</h3>
-            <small> Zona: {{empresa.zona}} </small><br>
-            <small> Teléfono: {{empresa.telefono}}</small><br>
-            <small> Horario: {{empresa.horario}}</small><br>
-            <small> Correo: {{empresa.correo}}</small><br>
-            <small> Direccion: {{empresa.direccion}}</small><br>
-            <small> Locación GPS: {{empresa.latitud}}  {{empresa.longitud}}</small><br>
-        </div>
-        <div class="card-body">
-            <!-- <a class="btn btn-info" href="">Más información</a> -->
-            <!-- <br> -->
-            {% if session_key %}
-            <a class="interact-button" href="/empresa/editar/{{empresa.id}}"><i class="fas fa-pencil-alt"></i></a>
-            <a class="interact-button" href="/empresa/borrar/{{empresa.id}}#"><i class="fas fa-trash-alt"></i></a>
-            {% endif %}
-        </div>
-        {% endif %}
-    {% endif %}
-</div>
+  <div class="card border-light">
+      <div class="card-body">
+        <h5 class="card-title">¿Desea contribuir?</h5>
+        <p class="card-text">Añada una nueva empresa</p>
+        <a href="{% url 'insertar_empresa' %}"><i class="fas fa-plus" id="new-icon"></i></a>
+      </div>
+      <div class="card-footer">
+        <h6 class="text-muted">Puedes crear tantas empresas como requiera.</h6>
+      </div>
+  </div>
+
+{% else %}
+
+  <div class="card mb-5">
+
+    <div class="card-body">
+
+      <h5 class="card-title">Empresa {{empresa.nombre}}</h5>
+      <p class="card-text">{{empresa.zona}}</p>
+
+      {# More info collapse #}
+      <div class="collapse" id="info-collapse{{ruta.id}}">
+        <ul class="list-group list-group-flush mb-4">
+          <li class="list-group-item">Horario: {{empresa.horario}}</li>
+          <li class="list-group-item">Email: {{empresa.correo}} minutos</li>
+          <li class="list-group-item">Dirección: {{empresa.direccion}} minutos</li>
+          <li class="list-group-item">Locación GPS: {{empresa.latitud}}, {{empresa.longitud}}</li>
+        </ul>
+      </div>
+
+      {# More Info #}
+      <a class="btn btn-dark" data-toggle="collapse" href="#info-collapse{{ruta.id}}" role="button" aria-expanded="false" aria-controls="info-collapse{{ruta.id}}">
+        Más información
+        <i class="fas fa-angle-down" style="color:white;"></i>
+      </a>
+
+      <br>
+      <br>
+
+      <a class="interact-button" href="{% url 'editar_empresa' id=empresa.id %}"><i class="fas fa-pencil-alt"></i></a>
+      <a class="interact-button" href="{% url 'borrar_empresa' id=empresa.id %}"><i class="fas fa-trash-alt"></i></a>
+
+    </div>
+
+    <div class="card-footer">
+      <h6 class="text-muted">Teléfono: {{empresa.telefono}}</h6>
+    </div>
+
+  </div>
+
+{% endif %}

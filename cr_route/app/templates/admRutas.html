@@ -7,8 +7,9 @@
 
 {% block mainContent %}
 
-    <link rel="stylesheet" href="{% static 'css/admRutas.css' %}">
-    <script src="{% static 'js/admRutas.js' %}" charset="utf-8"></script>
+    <link rel="stylesheet" href="{% static 'css/admRutasEmpresas.css' %}">
+    <script src="{% static 'js/moreInfoButton.js' %}" charset="utf-8"></script>
+
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-primary" role="alert">
@@ -16,13 +17,13 @@
             </div>
         {% endfor %}
     {% endif %}
+
     <div class="container mt-5">
 
         <div class="row">
             {% if session_key %}
           <div class="col-3 text-center">
-            <div class="card border-success">
-
+            <div class="card border-light">
                 <div class="card-body">
                   <h5 class="card-title">¿Desea contribuir?</h5>
                   <p class="card-text">Añada una nueva ruta</p>
@@ -39,7 +40,7 @@
 
             <div class="col-3 text-center">
 
-              <div class="card mb-5 border-dark bg-light">
+              <div class="card mb-5">
 
                 <div class="card-body">
 
@@ -64,7 +65,7 @@
                   </div>
 
                   {# More Info #}
-                  <a class="btn btn-secondary" data-toggle="collapse" href="#info-collapse{{ruta.id}}" role="button" aria-expanded="false" aria-controls="info-collapse{{ruta.id}}">
+                  <a class="btn btn-dark" data-toggle="collapse" href="#info-collapse{{ruta.id}}" role="button" aria-expanded="false" aria-controls="info-collapse{{ruta.id}}">
                     Más información
                     <i class="fas fa-angle-down" style="color:white;"></i>
                   </a>

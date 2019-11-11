@@ -1,0 +1,41 @@
+:root {
+  --secondary-color: #325082;
+}
+
+body {
+  background-image: linear-gradient(to right, #960000, #900000, #8a0000, #840000, #7e0000, #860002, #8f0003, #970004, #b00005, #ca0004, #e40003, #ff0000);
+}
+
+.interact-button{
+  color: var(--secondary-color);
+  font-size: 22px;
+}
+
+.interact-button:hover {
+  color: #C0392B !important;
+}
+
+.card {
+  border-bottom: solid 10px var(--secondary-color);
+  background-color: white;
+}
+
+.card:hover {
+  background-color: #F1F1F1;
+}
+
+#new-icon {
+  color: var(--secondary-color);
+  font-size: 40px;
+  padding: 10px;
+}
+
+#new-icon:hover {
+  /* font-size: 46px; */
+  color: #B10000;
+}
+
+.card-body a i {
+  padding: 5px;
+  font-size: 24px;
+}

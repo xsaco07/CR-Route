@@ -1,5 +1,5 @@
-  
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     Administrar Empresas
@@ -7,20 +7,25 @@
 
 {% block mainContent %}
 
-<div class="container">
-  <div class="row text-center">
-    <!-- AGREGAR CARDS DE EMPRESAS -->
-    {% for empresa in empresas %}
-        <div class="col-3">
-            {% include "card.html" with empresa=empresa %}
-        </div>  
-    {% endfor %}
+  <link rel="stylesheet" href="{% static 'css/admRutasEmpresas.css' %}">
+  <script src="{% static 'js/moreInfoButton.js' %}" charset="utf-8"></script>
 
-    <!-- PARA AGREGAR EL CARD DE INSERTAR EMPRESA -->
-    <div class="col-3">
-        {% include "card.html" with empresa=None %}
-    </div>  
+  <div class="container mt-5">
+    <div class="row">
+
+      <!-- PARA AGREGAR EL CARD DE INSERTAR EMPRESA -->
+      <div class="col-3 text-center">
+          {% include "card.html" with empresa=None %}
+      </div>
+
+      <!-- AGREGAR CARDS DE EMPRESAS -->
+      {% for empresa in empresas %}
+          <div class="col-3 text-center">
+              {% include "card.html" with empresa=empresa %}
+          </div>
+      {% endfor %}
+
+    </div>
   </div>
-</div>
 
 {% endblock %}

@@ -284,7 +284,8 @@ def salir_sesion(request):
     request.session.flush()
     return redirect("/login/")
 
-
+def contacto(request):
+    return render(request, "contacto.html");
 
 '''
     Retornar una lista con los puntos de una ruta por id
@@ -398,4 +399,3 @@ def api_api_rutas_dentro(request, lat1, lon1, lat2, lon2):
     destinos.filter()
     
     return HttpResponse("foo")
-
