@@ -11,6 +11,11 @@
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
     integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
     crossorigin=""></script>
+
+    <!-- Bootstrap Toggle -->
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
     <link rel="stylesheet" href="{% static 'css/rutas.css' %}">
 
     <div class="container-fluid">
@@ -30,7 +35,9 @@
       <div class="row justify-content-center">
 
         <div class="col-6 text-center">
-          <div id="map"></div>
+          <div id="map" class="mb-3"></div>
+          <button class="btn btn-primary mr-3" onclick="cleanMap()" type="button" id="clean_btn"><i class="fas fa-undo mr-2"></i>Limpiar</button>
+          <input type="checkbox" id="stop_flag" checked data-width="120" data-toggle="toggle" data-on="<i class='fas fa-map-marker-alt mr-2'></i>Punto" data-off="<i class='fas fa-bus-alt mr-2'></i>Parada" data-onstyle="danger" data-offstyle="warning">
         </div>
 
         <div class="col-6 text-center">

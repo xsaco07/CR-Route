@@ -83,8 +83,21 @@ function draw_loaded_path() {
   coordenates.push.apply(coordenates, final_coords);
 }
 
+function cleanMap() {
+  console.log("Cleaning");
+  polylines = [];
+  coordenates = [];
+  p_group.remove();
+  p_group = L.layerGroup(polylines).addTo(mymap);
+  markers.map(function(marker) {
+    console.log("Cleaning marker");
+    marker.remove();
+  });
+}
+
 $(document).ready(function() {
 
+  // Draw the path only when updating a route
   if(paradas) draw_loaded_path();
 
   var submit_button = $('button[type=submit]');
