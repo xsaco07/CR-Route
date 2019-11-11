@@ -8,7 +8,7 @@ var coordenates = [];
 var polylines = []
 var mymap = L.map('map').setView([startPoint.latitude, startPoint.longitude], 16);
 var p_group = L.layerGroup(polylines).addTo(mymap);
-
+var stop_flag = false;
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -17,7 +17,23 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 function onMapClick(e) {
 
-  var newMarker = L.marker(e.latlng);
+  var greenIcon = new L.Icon({
+    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var newMarker = null;
+
+  if(!stop_flag){
+    newMarker = L.marker(e.latlng);
+  }
+  else{
+    newMarker = L.marker(e.latlng, {icon: greenIcon});
+  }
+
   var lat = e.latlng.lat;
   var lng = e.latlng.lng;
 
@@ -25,19 +41,18 @@ function onMapClick(e) {
 
   newMarker.on('click',function(){
 
-    markers_function(this);
+    remove_marker(this);
 
   });
 
   markers.push(newMarker);
   coordenates.push([lat, lng]);
 
-  polylines.push(L.polyline(coordenates, {color: 'red'}));
-  p_group = L.layerGroup(polylines).addTo(mymap);
+  draw_path(coordenates);
 
 }
 
-function markers_function(marker) {
+function remove_marker(marker) {
   polylines = [];
   p_group.remove();
   marker.remove();
@@ -50,10 +65,12 @@ function markers_function(marker) {
   markers.splice(i, 1);
   coordenates.splice(i, 1);
 
-  polylines.push(L.polyline(coordenates, {color: 'red'}));
-  p_group = L.layerGroup(polylines).addTo(mymap);
+  draw_path(coordenates);
+
 }
 
+// This function is called the page is loaded with the purpose of updating a route
+// It takes the points from DB and draws the path through out the map
 function draw_loaded_path() {
   markers = [];
   var final_coords = []
@@ -74,17 +91,17 @@ function draw_loaded_path() {
   // Clean polyline
   polylines = [];
   p_group.remove();
+
   // Draw polyline
-  polylines.push(L.polyline(final_coords, {color: 'red'}));
-  p_group = L.layerGroup(polylines).addTo(mymap);
+  draw_path(final_coords);
 
   // Clear coords array
   coordenates = [];
+  // Set coordenates parsed from django view
   coordenates.push.apply(coordenates, final_coords);
 }
 
 function cleanMap() {
-  console.log("Cleaning");
   polylines = [];
   coordenates = [];
   p_group.remove();
@@ -93,6 +110,17 @@ function cleanMap() {
     console.log("Cleaning marker");
     marker.remove();
   });
+}
+
+// Takes an coordenates array and draws them on the map
+function draw_path(coordenates) {
+  polylines.push(L.polyline(coordenates, {color: 'red'}));
+  p_group = L.layerGroup(polylines).addTo(mymap);
+}
+
+function setFlag(input) {
+  if(input.checked) stop_flag = false;
+  else stop_flag = true;
 }
 
 $(document).ready(function() {

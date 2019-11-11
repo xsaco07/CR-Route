@@ -37,7 +37,7 @@
         <div class="col-6 text-center">
           <div id="map" class="mb-3"></div>
           <button class="btn btn-primary mr-3" onclick="cleanMap()" type="button" id="clean_btn"><i class="fas fa-undo mr-2"></i>Limpiar</button>
-          <input type="checkbox" id="stop_flag" checked data-width="120" data-toggle="toggle" data-on="<i class='fas fa-map-marker-alt mr-2'></i>Punto" data-off="<i class='fas fa-bus-alt mr-2'></i>Parada" data-onstyle="danger" data-offstyle="warning">
+          <input type="checkbox" id="flag" checked onchange="setFlag(this)" data-width="120" data-toggle="toggle" data-on="<i class='fas fa-map-marker-alt mr-2'></i>Punto" data-off="<i class='fas fa-bus-alt mr-2'></i>Parada" data-onstyle="primary" data-offstyle="success">
         </div>
 
         <div class="col-6 text-center">
