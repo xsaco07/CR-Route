@@ -9,36 +9,31 @@ from django.forms.models import model_to_dict
 # Create your views here.
 
 def home(request):
-    if request.session.modified == False:
-        try:
-            if request.session['flag'] == "flag":
-                pass
-            context = {"session_key": request.session.session_key}
-            return render(request, 'home.html', context=context)
-        except:
-            request.session.flush()
-            return render(request, 'home.html')
-    else:
-        context = {"session_key" : request.session.session_key}
+    try:
+        context = {"id": request.session['id'], "session_key": request.session.session_key}
         return render(request, 'home.html', context=context)
-    return render(request, 'home.html')
+    except:
+        return render(request, 'home.html')
 
 def listar_rutas(request):
     rutas = Ruta.objects.all()
-    context = {'rutas':rutas, "session_key": request.session.session_key}
-    return render(request, 'admRutas.html', context=context)
+    try:
+        context = {'rutas':rutas, "id": request.session['id'], "session_key": request.session.session_key}
+        return render(request, 'admRutas.html', context=context)
+    except:
+        context = {'rutas':rutas}
+        return render(request, 'admRutas.html', context=context)
 
 def borrar_ruta(request, id):
-    if not request.session.session_key:
+    if request.session.session_key:
         Ruta.objects.filter(id=id)[0].delete()
         return redirect('/ruta/listar')
     else:
-        context = {"session_key": request.session.session_key}
-        return render(request, "home.html", context=context)
+        return render(request, "home.html")
 
 @csrf_exempt
 def editar_ruta(request, id):
-    if not request.session.session_key:
+    if request.session.session_key:
         ruta = Ruta.objects.filter(id=id)[0]
         if request.method == "POST":
             data = request.POST
@@ -68,12 +63,11 @@ def editar_ruta(request, id):
             context['paradas'] = paradas_coords
             return render(request, "editar_crear_rutas.html", context=context)
     else:
-        context = {"session_key": request.session.session_key}
-        return render(request, "home.html", context=context)
+        return render(request, "home.html")
 
 @csrf_exempt
 def insertar_ruta(request):
-    if not request.session.session_key:
+    if request.session.session_key:
         if request.method == "POST":
             # Crear nueva Ruta
             data = request.POST
@@ -96,8 +90,7 @@ def insertar_ruta(request):
             context = {"action":"/ruta/insertar/"}
             return render(request, "editar_crear_rutas.html", context=context)
     else:
-        context = {"session_key": request.session.session_key}
-        return render(request, "home.html", context=context)
+        return render(request, "home.html")
 
 def crear_paradas(data, ruta):
     # Convert string to list of floats
@@ -127,18 +120,17 @@ def divide_chunks(l, n):
         yield l[i:i + n]
 
 def borrar_empresa(request, id):
-    if not request.session.session_key:
+    if request.session.session_key:
         Empresa.objects.filter(id=id)[0].delete()
         return render(request,"form_empresa.html",{
             "info_message":"Empresa borrada correctamente. ¿Te gustaría agregar una nueva?",
             "action":"/empresa/insertar/"})
     else:
-        context = {"session_key": request.session.session_key}
-        return render(request, "home.html", context=context)
+        return render(request, "home.html")
 
 @csrf_exempt
 def editar_empresa(request, id):
-    if not request.session.session_key:
+    if request.session.session_key:
         empresa = Empresa.objects.filter(id=id)[0]
         if request.method == "POST":
             data = request.POST
@@ -160,8 +152,7 @@ def editar_empresa(request, id):
             context["action"] = "/empresa/editar/"+str(id)+"/"
             return render(request, "form_empresa.html", context=context)
     else:
-        context = {"session_key": request.session.session_key}
-        return render(request, "home.html", context=context)
+        return render(request, "home.html")
 
 def listar_empresa(request, meta):
     empresas = Empresa.objects.all()
@@ -169,13 +160,16 @@ def listar_empresa(request, meta):
         # only return metadata id and name
         return render(request,"combo_options.html",{"empresas":empresas})
     else:
-        context = {"empresas":empresas, "session_key": request.session.session_key}
-        return render(request, 'admEmpresas.html', context=context)
-
+        try:
+            context = {"empresas":empresas, "id": request.session['id'], "session_key": request.session.session_key}
+            return render(request, 'admEmpresas.html', context=context)
+        except:
+            context = {"empresas":empresas}
+            return render(request, 'admEmpresas.html', context=context)
 
 @csrf_exempt
 def insertar_empresa(request):
-    if not request.session.session_key:
+    if request.session.session_key:
         if request.method == "POST":
             data = request.POST
             empresa = Empresa()
@@ -193,8 +187,7 @@ def insertar_empresa(request):
             context = {"action":"/empresa/insertar/"}
             return render(request, "form_empresa.html", context=context)
     else:
-        context = {"session_key": request.session.session_key}
-        return render(request, "home.html", context=context)
+        return render(request, "home.html")
 
 @csrf_exempt
 def registrar_usuario(request):
@@ -223,8 +216,8 @@ def registrar_usuario(request):
             context["titulo"] = "Nombre usuario"
             return render(request, "registrar_usuario.html", context=context)
     else:
-        context = {"session_key": request.session.session_key}
-        return render(request, "home.html", context=context)
+        return render(request, "home.html")
+
 @csrf_exempt
 def iniciar_sesion(request):
     if not request.session.session_key:
@@ -236,14 +229,14 @@ def iniciar_sesion(request):
                 usuario = Usuario.objects.filter(nombre_usuario=nombre_usuario)[0]
                 if usuario.nombre_usuario == nombre_usuario and usuario.contrasena == contrasena:
                     request.session.create()
-                    request.session['flag'] = 'flag'
-                    context = {"id" : usuario.id,
-                               "session_key" : request.session.session_key}
+                    request.session['id'] = usuario.id
+                    context = {"id": request.session['id'], "session_key": request.session.session_key}
+                    request.session.set_expiry(600)
                     return render(request, "home.html", context=context)
-                context = {"mensaje": 'El nombre de usuario o contraseña que has introducido es incorrecta'}
+                context = {"mensaje": 'La contraseña que has introducido es incorrecta'}
                 return render(request, "iniciar_sesion.html", context=context)
             except:
-                context = {"mensaje": 'El nombre de usuario o contraseña que has introducido es incorrecta'}
+                context = {"mensaje": 'El nombre de usuario que has introducido no existe'}
                 return render(request, "iniciar_sesion.html", context=context)
 
         elif request.method == "GET":
@@ -251,6 +244,7 @@ def iniciar_sesion(request):
     else:
         context = {"session_key": request.session.session_key}
         return render(request, "home.html", context=context)
+
 @csrf_exempt
 def editar_usuario(request, id):
     if request.session.session_key:
@@ -275,17 +269,27 @@ def editar_usuario(request, id):
 
 @csrf_exempt
 def borrar_usuario(request, id):
-    Usuario.objects.filter(id=id)[0].delete()
-    context = {"mensaje": 'Usuario borrado correctamente.'}
-    return render(request,"iniciar_sesion.html", context=context)
+    if request.session.session_key:
+        Usuario.objects.filter(id=id)[0].delete()
+        context = {"mensaje": 'Usuario borrado correctamente.'}
+        return render(request,"iniciar_sesion.html", context=context)
+    else:
+        return render(request, "home.html")
 
 @csrf_exempt
 def salir_sesion(request):
-    request.session.flush()
-    return redirect("/login/")
+    if request.session.session_key:
+        request.session.flush()
+        return redirect("/login/")
+    else:
+        return render(request, "home.html")
 
 def contacto(request):
-    return render(request, "contacto.html");
+    try:
+        context = {"id": request.session['id'], "session_key": request.session.session_key}
+        return render(request, "contacto.html", context=context)
+    except:
+        return render(request, "contacto.html")
 
 '''
     Retornar una lista con los puntos de una ruta por id
@@ -302,7 +306,6 @@ def puntos_de_ruta(id_ruta):
             "lon":punto.longitud
         })
     return puntos
-
 
 '''
     Retornar todas las rutas de una empresa serializadas a JSON
@@ -336,7 +339,6 @@ def api_rutas_por_empresa(request, id):
     response = {"rutas":rutas}
     
     return HttpResponse(json.dumps(response))
-
 
 '''
     Retornar los puntos de una ruta serializadas a JSON
@@ -383,7 +385,6 @@ def esta_contenido(punto_ref1, punto_ref2, punto_eval):
     # Validar en rango 
     return (min_lat <= punto_eval[LAT] <= max_lat) and \
         (min_lon <= punto_eval[LON] <= max_lon)
-
 
 '''
     Retornar las rutas que tienen destino final dentro de un rectangulo 
