@@ -1,5 +1,5 @@
 {% if empresa == None %}
-
+  {% if session_key %}
   <div class="card border-light">
       <div class="card-body">
         <h5 class="card-title">¿Desea contribuir?</h5>
@@ -10,7 +10,7 @@
         <h6 class="text-muted">Puedes crear tantas empresas como requiera.</h6>
       </div>
   </div>
-
+  {% endif %}
 {% else %}
 
   <div class="card mb-5">
