@@ -55,7 +55,7 @@ def editar_ruta(request, id):
 
         elif request.method == "GET":
 
-            paradas = Parada.objects.filter(ruta=ruta).order_by('serial')
+            paradas = Punto.objects.filter(ruta=ruta).order_by('serial')
             paradas_coords = []
 
             for parada in paradas:
@@ -108,16 +108,17 @@ def crear_paradas(data, ruta):
     final_coordenates = list(divide_chunks(coordenates, 2))
 
     # Borrar paradas previamente asociadas
-    Parada.objects.filter(ruta=ruta).delete()
+    Punto.objects.filter(ruta=ruta).delete()
 
     # Crear nuevas Paradas
     serial = 1;
     for par in final_coordenates:
-        parada = Parada()
+        parada = Punto()
         parada.ruta = ruta
         parada.serial = serial
         parada.latitud = par[0]
         parada.longitud = par[1]
+        parada.esParada = False #TODO quitar este valor quemado 
         parada.save()
         serial += 1
 
