@@ -27,7 +27,11 @@ def listar_rutas(request):
 def borrar_ruta(request, id):
     if request.session.session_key:
         Ruta.objects.filter(id=id)[0].delete()
-        return redirect('/ruta/listar')
+        try:
+            context = {"id": request.session['id'], "session_key": request.session.session_key}
+            return redirect('/ruta/listar', context=context)
+        except:
+            return redirect('/ruta/listar')
     else:
         return render(request, "home.html")
 
@@ -46,8 +50,8 @@ def editar_ruta(request, id):
             ruta.save()
 
             crear_paradas(data, ruta)
-
-            return redirect('/ruta/listar')
+            context = {"id": request.session['id'], "session_key": request.session.session_key}
+            return redirect('/ruta/listar', context=context)
 
         elif request.method == "GET":
 
@@ -61,6 +65,8 @@ def editar_ruta(request, id):
             context = model_to_dict(ruta)
             context["action"] = "/ruta/editar/"+str(id)+"/"
             context['paradas'] = paradas_coords
+            context["id"] = request.session['id']
+            context["session_key"] = request.session.session_key
             return render(request, "editar_crear_rutas.html", context=context)
     else:
         return render(request, "home.html")
@@ -84,10 +90,11 @@ def insertar_ruta(request):
             crear_paradas(data, ruta)
 
             messages.info(request, 'Ruta creada exitosamente.')
+            context = {"id": request.session['id'], "session_key": request.session.session_key}
             return listar_rutas(request)
 
         elif request.method == "GET":
-            context = {"action":"/ruta/insertar/"}
+            context = {"action":"/ruta/insertar/", "id": request.session['id'], "session_key": request.session.session_key}
             return render(request, "editar_crear_rutas.html", context=context)
     else:
         return render(request, "home.html")
@@ -124,7 +131,7 @@ def borrar_empresa(request, id):
         Empresa.objects.filter(id=id)[0].delete()
         return render(request,"form_empresa.html",{
             "info_message":"Empresa borrada correctamente. ¿Te gustaría agregar una nueva?",
-            "action":"/empresa/insertar/"})
+            "action":"/empresa/insertar/", "id": request.session['id'], "session_key": request.session.session_key})
     else:
         return render(request, "home.html")
 
@@ -145,11 +152,15 @@ def editar_empresa(request, id):
             empresa.save()
             return render(request,"form_empresa.html",{
                 "action":"empresa/insertar/",
-                "info_message":"¡Datos actualizados correctamente!"
+                "info_message":"¡Datos actualizados correctamente!",
+                "id": request.session['id'],
+                "session_key": request.session.session_key
             })
         elif request.method == "GET":
             context = model_to_dict(empresa)
             context["action"] = "/empresa/editar/"+str(id)+"/"
+            context["id"] = request.session['id']
+            context["session_key"] = request.session.session_key
             return render(request, "form_empresa.html", context=context)
     else:
         return render(request, "home.html")
@@ -158,7 +169,7 @@ def listar_empresa(request, meta):
     empresas = Empresa.objects.all()
     if(meta):
         # only return metadata id and name
-        return render(request,"combo_options.html",{"empresas":empresas})
+        return render(request,"combo_options.html",{"empresas":empresas, "id": request.session['id'], "session_key": request.session.session_key})
     else:
         try:
             context = {"empresas":empresas, "id": request.session['id'], "session_key": request.session.session_key}
@@ -182,9 +193,9 @@ def insertar_empresa(request):
             empresa.longitud = data["longitud"]
             empresa.horario = data["horario"]
             empresa.save()
-            return render(request, "form_empresa.html",{"info_message":"Empresa registrada exitosamente!"})
+            return render(request, "form_empresa.html",{"info_message":"Empresa registrada exitosamente!", "id": request.session['id'], "session_key": request.session.session_key})
         elif request.method == "GET":
-            context = {"action":"/empresa/insertar/"}
+            context = {"action":"/empresa/insertar/", "id": request.session['id'], "session_key": request.session.session_key}
             return render(request, "form_empresa.html", context=context)
     else:
         return render(request, "home.html")
@@ -263,6 +274,7 @@ def editar_usuario(request, id):
             context["action"] = "/usuario/editar/"+str(id)+"/"
             context["titulo"] = "Editar usuario"
             context["session_key"] = request.session.session_key
+            context["id"] = request.session['id']
             return render(request, "registrar_usuario.html", context=context)
     else:
         return render(request, "home.html")
