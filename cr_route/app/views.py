@@ -27,7 +27,11 @@ def listar_rutas(request):
 def borrar_ruta(request, id):
     if request.session.session_key:
         Ruta.objects.filter(id=id)[0].delete()
-        return redirect('/ruta/listar')
+        try:
+            context = {"id": request.session['id'], "session_key": request.session.session_key}
+            return redirect('/ruta/listar', context=context)
+        except:
+            return redirect('/ruta/listar')
     else:
         return render(request, "home.html")
 
@@ -46,12 +50,12 @@ def editar_ruta(request, id):
             ruta.save()
 
             crear_paradas(data, ruta)
-
-            return redirect('/ruta/listar')
+            context = {"id": request.session['id'], "session_key": request.session.session_key}
+            return redirect('/ruta/listar', context=context)
 
         elif request.method == "GET":
 
-            paradas = Parada.objects.filter(ruta=ruta).order_by('serial')
+            paradas = Punto.objects.filter(ruta=ruta).order_by('serial')
             paradas_coords = []
 
             for parada in paradas:
@@ -61,6 +65,8 @@ def editar_ruta(request, id):
             context = model_to_dict(ruta)
             context["action"] = "/ruta/editar/"+str(id)+"/"
             context['paradas'] = paradas_coords
+            context["id"] = request.session['id']
+            context["session_key"] = request.session.session_key
             return render(request, "editar_crear_rutas.html", context=context)
     else:
         return render(request, "home.html")
@@ -84,10 +90,11 @@ def insertar_ruta(request):
             crear_paradas(data, ruta)
 
             messages.info(request, 'Ruta creada exitosamente.')
+            context = {"id": request.session['id'], "session_key": request.session.session_key}
             return listar_rutas(request)
 
         elif request.method == "GET":
-            context = {"action":"/ruta/insertar/"}
+            context = {"action":"/ruta/insertar/", "id": request.session['id'], "session_key": request.session.session_key}
             return render(request, "editar_crear_rutas.html", context=context)
     else:
         return render(request, "home.html")
@@ -101,16 +108,17 @@ def crear_paradas(data, ruta):
     final_coordenates = list(divide_chunks(coordenates, 2))
 
     # Borrar paradas previamente asociadas
-    Parada.objects.filter(ruta=ruta).delete()
+    Punto.objects.filter(ruta=ruta).delete()
 
     # Crear nuevas Paradas
     serial = 1;
     for par in final_coordenates:
-        parada = Parada()
+        parada = Punto()
         parada.ruta = ruta
         parada.serial = serial
         parada.latitud = par[0]
         parada.longitud = par[1]
+        parada.esParada = False #TODO quitar este valor quemado
         parada.save()
         serial += 1
 
@@ -124,7 +132,7 @@ def borrar_empresa(request, id):
         Empresa.objects.filter(id=id)[0].delete()
         return render(request,"form_empresa.html",{
             "info_message":"Empresa borrada correctamente. ¿Te gustaría agregar una nueva?",
-            "action":"/empresa/insertar/"})
+            "action":"/empresa/insertar/", "id": request.session['id'], "session_key": request.session.session_key})
     else:
         return render(request, "home.html")
 
@@ -145,11 +153,15 @@ def editar_empresa(request, id):
             empresa.save()
             return render(request,"form_empresa.html",{
                 "action":"empresa/insertar/",
-                "info_message":"¡Datos actualizados correctamente!"
+                "info_message":"¡Datos actualizados correctamente!",
+                "id": request.session['id'],
+                "session_key": request.session.session_key
             })
         elif request.method == "GET":
             context = model_to_dict(empresa)
             context["action"] = "/empresa/editar/"+str(id)+"/"
+            context["id"] = request.session['id']
+            context["session_key"] = request.session.session_key
             return render(request, "form_empresa.html", context=context)
     else:
         return render(request, "home.html")
@@ -158,7 +170,7 @@ def listar_empresa(request, meta):
     empresas = Empresa.objects.all()
     if(meta):
         # only return metadata id and name
-        return render(request,"combo_options.html",{"empresas":empresas})
+        return render(request,"combo_options.html",{"empresas":empresas, "id": request.session['id'], "session_key": request.session.session_key})
     else:
         try:
             context = {"empresas":empresas, "id": request.session['id'], "session_key": request.session.session_key}
@@ -182,9 +194,9 @@ def insertar_empresa(request):
             empresa.longitud = data["longitud"]
             empresa.horario = data["horario"]
             empresa.save()
-            return render(request, "form_empresa.html",{"info_message":"Empresa registrada exitosamente!"})
+            return render(request, "form_empresa.html",{"info_message":"Empresa registrada exitosamente!", "id": request.session['id'], "session_key": request.session.session_key})
         elif request.method == "GET":
-            context = {"action":"/empresa/insertar/"}
+            context = {"action":"/empresa/insertar/", "id": request.session['id'], "session_key": request.session.session_key}
             return render(request, "form_empresa.html", context=context)
     else:
         return render(request, "home.html")
@@ -263,6 +275,7 @@ def editar_usuario(request, id):
             context["action"] = "/usuario/editar/"+str(id)+"/"
             context["titulo"] = "Editar usuario"
             context["session_key"] = request.session.session_key
+            context["id"] = request.session['id']
             return render(request, "registrar_usuario.html", context=context)
     else:
         return render(request, "home.html")
@@ -297,7 +310,7 @@ def contacto(request):
 '''
 def puntos_de_ruta(id_ruta):
     # Conseguir los puntos de la ruta ordenados por el serial
-    registros_puntos = Parada.objects.filter(ruta_id=id_ruta).order_by("serial")
+    registros_puntos = Punto.objects.filter(ruta_id=id_ruta).order_by("serial")
     puntos = []
     for punto in registros_puntos:
         puntos.append({
@@ -389,14 +402,50 @@ def esta_contenido(punto_ref1, punto_ref2, punto_eval):
 '''
     Retornar las rutas que tienen destino final dentro de un rectangulo
 '''
-def api_api_rutas_dentro(request, lat1, lon1, lat2, lon2):
+def api_rutas_dentro(request, lat1, lon1, lat2, lon2):
     # Parsear los parametros a floats
-    (lat1,lon1,lat2,lon2) = map(lambda x:float(x), (lat1,lon1,lat2,lon2))
+    (lat1, lon1, lat2, lon2) = map(lambda x: float(x), (lat1, lon1, lat2, lon2))
+
+    # Conseguir los rangos de latitud y longitud del area especificada
+    ref1 = (lat1, lon1)
+    ref2 = (lat2, lon2)
 
     # Obtener las ultimas paradas de las rutas
-    destinos = Parada.objects.filter(es_parada=True).order_by("-serial")[0]
+    destinos = Punto.objects.raw(
+        "select *, max(serial) from app_punto group by ruta_id;")
+
+    ids_rutas = []
 
     # Filtrar las que quedan dentro los rangos de búsqueda
-    destinos.filter()
+    for dest in destinos:
+        if(esta_contenido(ref1, ref2, (dest.latitud, dest.longitud))):
+            ids_rutas.append(dest.ruta.id)
 
-    return HttpResponse("foo")
+    rutas = []
+    for id in ids_rutas:
+        rutas.append(ruta_a_dicc(id))
+
+    return HttpResponse(json.dumps({"rutas":rutas}))
+
+
+'''
+    Dado un id de ruta retornar un diccionario con todos los atributos simples
+    de la ruta, sus puntos y el nombre de la empresa
+'''
+def ruta_a_dicc(id_ruta):
+    registro = Ruta.objects.filter(id=id_ruta)[0]
+
+    # Conseguir los puntos de la ruta
+    puntos = puntos_de_ruta(registro.id)
+
+    # Llenar nuevo objeto json con datos
+    return {
+        "numero_ruta": registro.numero_ruta,
+        "nombre_empresa": registro.empresa.nombre,
+        "descripcion": registro.descripcion,
+        "precio": registro.precio,
+        "horario": registro.horario,
+        "duracion": registro.duracion,
+        "rampa": registro.rampa,
+        "puntos": puntos
+    }

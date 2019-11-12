@@ -38,5 +38,5 @@ urlpatterns = [
     path('', home),
     path('api/rutas_por_empresa/<int:id>/', api_rutas_por_empresa),
     path('api/ruta_por_numero/<int:num_ruta>/', api_puntos_por_num_ruta),
-    path('api/rutas_dentro/<slug:lat1>,<slug:lon1>/<slug:lat2>,<slug:lon2>/', api_api_rutas_dentro),
+    path('api/rutas_dentro/<str:lat1>,<str:lon1>/<str:lat2>,<str:lon2>/', api_rutas_dentro),
 ]
