@@ -78,7 +78,7 @@ def insertar_ruta(request):
             # Crear nueva Ruta
             data = request.POST
             ruta = Ruta()
-            ruta.empresa = Empresa.objects.last()
+            ruta.empresa = Empresa.objects.filter(id=data["id_empresa"]).last()
             ruta.numero_ruta = data["numero_ruta"]
             ruta.descripcion = data["descripcion"]
             ruta.precio = data["precio"]
@@ -100,27 +100,22 @@ def insertar_ruta(request):
         return render(request, "home.html")
 
 def crear_paradas(data, ruta):
-    # Convert string to list of floats
-    coordenates = data['puntos'].split(',')
-    coordenates = list(map(float, coordenates))
 
-    # Create matrix of points
-    final_coordenates = list(divide_chunks(coordenates, 2))
+    # Parse string to json object
+    json_paradas = json.loads(data['puntos'])
 
     # Borrar paradas previamente asociadas
     Punto.objects.filter(ruta=ruta).delete()
 
     # Crear nuevas Paradas
-    serial = 1;
-    for par in final_coordenates:
+    for serial in json_paradas.keys():
         parada = Punto()
         parada.ruta = ruta
         parada.serial = serial
-        parada.latitud = par[0]
-        parada.longitud = par[1]
-        parada.esParada = False #TODO quitar este valor quemado
+        parada.latitud = json_paradas[serial]['latitud']
+        parada.longitud = json_paradas[serial]['longitud']
+        parada.esParada = json_paradas[serial]['esParada']
         parada.save()
-        serial += 1
 
 # Divide list in chunks
 def divide_chunks(l, n):
