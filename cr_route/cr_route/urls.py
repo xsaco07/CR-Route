@@ -25,7 +25,7 @@ urlpatterns = [
     path('empresa/editar/<int:id>/', editar_empresa, name='editar_empresa'),
     path('empresa/listar/', listar_empresa, {"meta":False}, name='empresas'),
     path('empresa/listar/meta/', listar_empresa, {"meta":True}),
-    path('ruta/listar/', listar_rutas, name='rutas'),
+    path('ruta/listar/', listar_rutas, {"meta":False}, name='rutas'),
     path('ruta/listar/meta/', listar_rutas, {"meta":True}),
     path('ruta/editar/<int:id>/', editar_ruta, name='editar_ruta'),
     path('ruta/insertar/', insertar_ruta, name='insertar_ruta'),
@@ -39,6 +39,6 @@ urlpatterns = [
     path('', home),
     path('api/rutas_por_empresa/<int:id>/', api_rutas_por_empresa),
     path('api/ruta_por_numero/<int:num_ruta>/', api_puntos_por_num_ruta),
-    path('api/rutas_dentro/<str:lat1>,<str:lon1>/<str:lat2>,<str:lon2>/', api_rutas_dentro),
+    path('api/rutas_dentro/<str:lat1>,<str:lon1>/<str:lat2>,<str:lon2>/<str:criterio>/', api_rutas_dentro),
     path("buscar_rutas/", buscar_rutas)
 ]
