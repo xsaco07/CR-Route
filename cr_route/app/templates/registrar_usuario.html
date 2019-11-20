@@ -58,7 +58,12 @@
                     </div>
 
                     <!-- ENVIAR -->
-                    <button type="submit" class="btn btn-primary">Registrarse</button>
+                    {% if titulo == "Editar usuario" %}
+                        <button type="submit" class="btn btn-primary">Editar</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    {% endif %}
+
                     {% if titulo != "Nombre usuario"  %}
                         <div class="form-group" align="right">
                         <a href="/usuario/borrar/{{id}}#">Eliminar mi cuenta permanentemente</a>
