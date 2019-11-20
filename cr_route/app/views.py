@@ -15,9 +15,18 @@ def home(request):
     except:
         return render(request, 'home.html')
 
-def listar_rutas(request):
+def listar_rutas(request, meta):
     rutas = Ruta.objects.all()
     try:
+        if(meta):
+            result = []
+            for ruta in rutas:
+                result.append({
+                    "descripcion":ruta.descripcion,
+                    "empresa":ruta.empresa.nombre,
+                    "id":ruta.id
+                    })
+            return HttpResponse(json.dumps(result))
         context = {'rutas':rutas, "id": request.session['id'], "session_key": request.session.session_key}
         return render(request, 'admRutas.html', context=context)
     except:
@@ -468,3 +477,9 @@ def registrar_log(nombre_usuario, accion, tabla):
     log.accion = accion
     log.tabla = tabla
     log.save()
+
+'''
+    Página para buscar una ruta según diferentes criterios
+'''
+def buscar_rutas(request):
+    return render(request, "buscar_rutas.html",{})

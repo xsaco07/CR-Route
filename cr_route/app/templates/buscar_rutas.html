@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}
+Buscar rutas
+{% endblock title %}
+
+
+{% block mainContent %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <form>
+                <div class="form-group">
+                    <label for="criterio">Criterio de busqueda</label>
+                    <select type="email" class="form-control" id="criterio">
+                        <option value="">Seleccione el criterio</option>
+                        <option value="empresa">Por empresa</option>
+                        <option value="ruta">Por ruta</option>
+                        <option value="destino">Por destino común</option>
+                        <option value="paradas">Por paradas intermedias</option>
+                    </select>
+                </div>
+                <div id="campos" class="form-group">
+                    <!-- Aquí se colocan objetos dinámicos según el criterio -->
+                </div>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#criterio").on("change",criterio_cambiado);
+    });
+
+    function criterio_cambiado(){
+        // Limpiar la zona de campos variables
+        $("#campos").empty();
+
+        // Rellenar la zona según el criterio seleccionado
+        switch(this.value){
+            case "empresa":
+                form_por_empresa();
+                break;
+            case "ruta":
+                form_por_ruta();
+                break;
+            case "destino":
+                form_por_destino();
+                break
+            case "paradas":
+                form_por_paradas();
+                break;
+        }
+    }
+
+    // Agrega un combo con las empresas 
+    function form_por_empresa(){
+        // Crear el combo
+        var combo_empresa = document.createElement("select");
+        $(combo_empresa).addClass("form-control");
+        var div = document.createElement("div");
+        $(div).addClass("form-group");
+
+        // Hacer la peticion para conseguir las empresas
+        $.ajax({
+            url:"/empresa/listar/meta/",
+        }).done(function(data){
+            $(combo_empresa).html(data);
+        });
+
+        // Agregar el combo la página
+        $("#campos").append(combo_empresa);
+    }
+    
+    // Agrega un datalist con todas la rutas en su descripcion y empresa
+    function form_por_ruta(){        
+        // Crear la lista opciones 
+        var lista = $(document.createElement("datalist"));
+        lista.attr("id","lista_rutas");
+
+        // Crear input y ponerle la referencia a su lista
+        var input = $(document.createElement("input"));
+        input.attr("list","lista_rutas");
+        input.append(lista); // agregar la lista dentro del input 
+
+        // Agregar el input a la página 
+        $("#campos").append(input);
+
+        // Enviar petición para listar las rutas (opciones)
+        $.ajax({
+            url:"/ruta/listar/meta/"
+        }).done(function(data){
+            // Deserializar la respuesta
+            const rutas = JSON.parse(data);
+
+            // Crear un <option> por cada ruta 
+            rutas.forEach(function(ruta){
+                var option = $(document.createElement("option"));
+                // Lo que se mostrará en pantalla (nombre legible)
+                option.html(`${ruta.descripcion} [${ruta.empresa}]`);
+                // El valor que se enviará realmente 
+                option.attr("value",ruta.id);
+                // Agregar la nueva opción a la lista ya existente
+                $(lista).append(option);
+
+            });
+            
+        });
+    }
+    
+    // Agregar un mapa a la página para que el usuario pueda delimitar el
+    // área de búsqueda deseada 
+    function form_por_destinos(){
+    }
+    
+    // Agregar un mapa a la página para que el usuario pueda delimitar el
+    // área de búsqueda deseada 
+    function form_por_paradas(){
+    }
+</script>
+
+{% endblock %}
