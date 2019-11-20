@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from app.models import *
 import json 
+from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 
@@ -449,3 +450,38 @@ def ruta_a_dicc(id_ruta):
         "rampa": registro.rampa,
         "puntos": puntos
     }
+
+
+'''
+    Los logs se buscarán por fecha de inicio y fecha final 
+'''
+def buscar_logs(request):
+    return render(request, "buscar_logs.html",{})
+
+# convertir string -AAAA-MM-DD- a objeto datetime 
+def convertir_fecha(string):
+    ANO = 0
+    MES = 1
+    DIA = 2
+    campos = string.split("-")
+    print(">>>",campos)
+    return datetime(int(campos[ANO]), int(campos[MES]), int(campos[DIA]))
+
+def api_buscar_logs(request, fecha_inicio, fecha_fin):
+    print(f"{fecha_inicio} to {fecha_fin}")
+    
+    inicio = convertir_fecha(fecha_inicio)
+    fin = convertir_fecha(fecha_fin)
+    fin = fin.replace(hour=23) #validate all day 
+
+    logs = Log.objects.filter(hora__range=[inicio, fin])
+
+    result = []
+    for log in logs:
+        result.append({
+            "fecha":log.hora.strftime("%a %d %b %Y"),
+            "usuario":log.nombre_usuario.nombre_usuario,
+            "accion":log.accion,
+            "tabla":log.tabla
+        })
+    return HttpResponse(json.dumps(result))

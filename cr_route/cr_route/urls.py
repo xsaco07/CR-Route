@@ -35,8 +35,11 @@ urlpatterns = [
     path('login/', iniciar_sesion),
     path('logout/', salir_sesion),
     path('contacto/', contacto),
+    path('buscar_logs/', buscar_logs),
     path('', home),
     path('api/rutas_por_empresa/<int:id>/', api_rutas_por_empresa),
     path('api/ruta_por_numero/<int:num_ruta>/', api_puntos_por_num_ruta),
+    path('api/buscar_logs/<slug:fecha_inicio>/<slug:fecha_fin>/', api_buscar_logs),
     path('api/rutas_dentro/<str:lat1>,<str:lon1>/<str:lat2>,<str:lon2>/', api_rutas_dentro),
+
 ]
