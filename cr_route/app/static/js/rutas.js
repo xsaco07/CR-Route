@@ -73,13 +73,24 @@ function onMapClick(e) {
 // Add event handlers to both buttons
 function deploy_stop_form(marker) {
 
+  // Delete elements if they already exists in DOM
+  if($('#desc-btn-option') != null) $('#desc-btn-option').remove();
+  if($('#delete-btn-option') != null) $('#delete-btn-option').remove();
+
+  // Delete all h5 elements in DOM
+  $('.h5').remove();
+
   // Bind html to popup to make an markers_function
   // Add a description or delete it
-  var options_html = "<h6 class='text-center'>Agregando Parada</h6> \
+  var options_html = "<h5 class='text-center'>Agregando Parada</h5> \
   <input type='button' class='btn btn-success' value='Describir' id='desc-btn-option'> \
   <input type='button' class='btn btn-danger' value='Eliminar' id='delete-btn-option'>";
 
   marker.bindPopup(options_html).openPopup();
+
+  // Delete elements if they already exists in DOM
+  if($('#desc-btn-option') != null) $('#desc-input').remove();
+  if($('#delete-btn-option') != null) $('#desc-btn').remove();
 
   // Bind html to popup to add a description
   var add_desc_html = "<h5>Agregue una descripción</h5> \
@@ -141,7 +152,6 @@ function get_all_points_json() {
   for(var i = 0; i < markers.length; i++) {
     points[(current_serial++).toString()] = marker_to_json(markers[i]);
   }
-  console.log(points);
   return points;
 }
 
@@ -157,7 +167,7 @@ function remove_marker(marker) {
 
   markers.splice(i, 1);
   coordenates.splice(i, 1);
-
+  descriptions.splice(i, 1);
   draw_path(coordenates);
 
 }
@@ -195,6 +205,7 @@ function draw_loaded_path() {
 }
 
 function cleanMap() {
+
   polylines = [];
   coordenates = [];
   p_group.remove();
@@ -226,8 +237,7 @@ $(document).ready(function() {
 
   submit_button.on('click', function() {
     var hidden_input = $('#puntos-ruta');
-    hidden_input.val(coordenates.toString());
-    console.log(get_all_points_json());
+    hidden_input.val(JSON.stringify(get_all_points_json()));
   });
 
 });
