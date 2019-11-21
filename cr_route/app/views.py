@@ -337,7 +337,8 @@ def puntos_de_ruta(id_ruta):
         puntos.append({
             "serial":punto.serial,
             "lat":punto.latitud,
-            "lon":punto.longitud
+            "lon":punto.longitud,
+            "esParada": punto.esParada
         })
     return puntos
 

@@ -11,7 +11,7 @@ Buscar rutas
     <div class="row justify-content-center">
 
         <!-- COLUMNA IZQUIERDA ES EL MAPA -->
-        <div class="col-8">
+        <div class="col-6">
             <div id="divmapa" class="row-8 justify-content-center">
 
                 <!-- MAPA -->
@@ -40,7 +40,7 @@ Buscar rutas
         </div>
 
         <!-- COLUMNA DERECHA ES EL FORMULARIO DE BUSQUEDA -->
-        <div class="col-4">
+        <div class="col-6">
             <form>
                 <div class="form-group">
                     <label for="criterio">Criterio de busqueda</label>
@@ -57,6 +57,7 @@ Buscar rutas
                 </div>
                 <button id="buscar" class="btn btn-primary">Buscar</button>
                 <button id="limpiar" class="btn btn-danger">Limpiar selección</button>
+                <button id="limpiar_mapa" class="btn btn-success">Limpiar mapa</button>
             </form>
         </div>
     </div>
@@ -68,6 +69,7 @@ Buscar rutas
     var mapa;
     var puntos_ref = []; // lista de los puntos de referencia para buscar 
     var polygon_area;
+    var layer_group; // todos los elementos en el mapa
 
     // Dibuja un rectangulo marcado por los puntos_ref dentro del mapa
     function dibujar_area(){
@@ -153,9 +155,6 @@ Buscar rutas
     }
 
     function pedir_rutas(){
-        // Limpiar rutas anteriores
-        
-
         // Ver qué criterio se está usando 
         // y construir url según el criterio 
         var criterio = $("#criterio").val();
@@ -186,23 +185,39 @@ Buscar rutas
         $.ajax({url:api_url})
         .done(function(data){
             var polylines = [];
+            var marcadores = [];
 
             var obj_json = JSON.parse(data);
             
             obj_json.rutas.forEach(function(ruta){
                 var coords = [];
                 ruta.puntos.forEach(function(punto){
-                    coords.push([punto.lat, punto.lon]);
+                    coords.push([punto.lat, punto.lon]); // agregar el punto a la traza 
+                    if(punto.esParada){
+                        marcadores.push(L.marker([punto.lat, punto.lon]));
+                    }
                 });
                 polylines.push(L.polyline(coords,{color:"green"}));
                 console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
             });
 
-            // Pintar rutas recibidas en el mapa 
-            L.layerGroup(polylines).addTo(mapa);
+            // Pintar rutas recibidas en el mapa
+            if(layer_group == undefined){
+                layer_group = L.layerGroup(polylines.concat(marcadores));
+                layer_group.addTo(mapa);
+
+            }else{
+                polylines.concat(marcadores).forEach(function(layer){
+                    layer_group.addLayer(layer);
+                });
+            }
             
         });
 
+    }
+
+    function limpiar_mapa(){
+        if(layer_group != undefined) layer_group.clearLayers();
     }
 
     $(document).ready(function () {
@@ -210,7 +225,6 @@ Buscar rutas
         $("#criterio").on("change", criterio_cambiado);
         
         configurar_mapa();
-
 
         habilitar_seleccionar_area();
 
@@ -221,6 +235,8 @@ Buscar rutas
         });
 
         $("#buscar").on("click", pedir_rutas);
+
+        $("#limpiar_mapa").on("click", limpiar_mapa);
 
 
     });
