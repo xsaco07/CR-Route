@@ -21,7 +21,7 @@
       <p class="card-text">{{empresa.zona}}</p>
 
       {# More info collapse #}
-      <div class="collapse" id="info-collapse{{ruta.id}}">
+      <div class="collapse" id="info-collapse{{empresa.id}}">
         <ul class="list-group list-group-flush mb-4">
           <li class="list-group-item">Horario: {{empresa.horario}}</li>
           <li class="list-group-item">Email: {{empresa.correo}} </li>
@@ -31,7 +31,7 @@
       </div>
 
       {# More Info #}
-      <a class="btn btn-dark" data-toggle="collapse" href="#info-collapse{{ruta.id}}" role="button" aria-expanded="false" aria-controls="info-collapse{{ruta.id}}">
+      <a class="btn btn-dark" data-toggle="collapse" href="#info-collapse{{empresa.id}}" role="button" aria-expanded="false" aria-controls="info-collapse{{ruta.id}}">
         Más información
         <i class="fas fa-angle-down" style="color:white;"></i>
       </a>
