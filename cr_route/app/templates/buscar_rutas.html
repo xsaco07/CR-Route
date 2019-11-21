@@ -154,6 +154,14 @@ Buscar rutas
         center_map(mapa);
     }
 
+    function getRandomColor(){
+        const colores = ["green","red","blue","yellow","magenta","cyan","purple"];
+        const i = Math.round(Math.random()*(colores.length-1));
+        return colores[i];
+
+    }
+
+
     function pedir_rutas(){
         // Ver qué criterio se está usando 
         // y construir url según el criterio 
@@ -197,7 +205,7 @@ Buscar rutas
                         marcadores.push(L.marker([punto.lat, punto.lon]));
                     }
                 });
-                polylines.push(L.polyline(coords,{color:"green"}));
+                polylines.push(L.polyline(coords,{color:getRandomColor()}));
                 console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
             });
 
