@@ -2,11 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from app.models import *
-import json 
+
+import json
+import math
+
 from datetime import datetime
 
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
+from django.db.models.query import QuerySet
 
 # Create your views here.
 
@@ -462,7 +466,7 @@ def api_rutas_dentro(request, lat1, lon1, lat2, lon2, criterio):
         return HttpResponse(json.dumps({"rutas":rutas}))
     else:
         return HttpResponse(f"Criterio invalido: {criterio}")
-    
+
 
 
 '''
@@ -502,21 +506,21 @@ def buscar_rutas(request):
 
 
 def api_ruta_por_id(request, id_ruta):
-    id = int (id_ruta) 
+    id = int (id_ruta)
     ruta = Ruta.objects.filter(id=id)[0]
 
     resultado = {"rutas":[ruta_a_dicc(ruta.id)]}
 
     return HttpResponse(json.dumps(resultado))
 
-'''  
-    Los logs se buscarán por fecha de inicio y fecha final 
+'''
+    Los logs se buscarán por fecha de inicio y fecha final
 '''
 
 def buscar_logs(request):
     return render(request, "buscar_logs.html",{})
 
-# convertir string -AAAA-MM-DD- a objeto datetime 
+# convertir string -AAAA-MM-DD- a objeto datetime
 def convertir_fecha(string):
     ANO = 0
     MES = 1
@@ -527,10 +531,10 @@ def convertir_fecha(string):
 
 def api_buscar_logs(request, fecha_inicio, fecha_fin):
     print(f"{fecha_inicio} to {fecha_fin}")
-    
+
     inicio = convertir_fecha(fecha_inicio)
     fin = convertir_fecha(fecha_fin)
-    fin = fin.replace(hour=23) #validate all day 
+    fin = fin.replace(hour=23) #validate all day
 
     logs = Log.objects.filter(hora__range=[inicio, fin])
 
@@ -543,3 +547,99 @@ def api_buscar_logs(request, fecha_inicio, fecha_fin):
             "tabla":log.tabla
         })
     return HttpResponse(json.dumps(result))
+
+def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long):
+
+    # Parsear los parametros a floats
+    (usr_lat, usr_long, dest_lat, dest_long) = map(lambda x: float(x), (usr_lat, usr_long, dest_lat, dest_long))
+
+    # Obtener las ultimas paradas de cada ruta
+    # TODO: optimizar esta consulta para que no traiga TODOS los puntos finales
+    puntos_finales = Punto.objects.raw(
+        "select *, max(serial) from app_punto group by ruta_id;")
+
+    # Obtener los ids de las paradas finales mas cercas al destino
+    ids_paradas_finales = get_n_nearest_points(3, puntos_finales, dest_lat, dest_long)
+
+    print("Ids: ", ids_paradas_finales)
+
+    # Obtener las rutas que hacen match con los ids de las paradas cercanas
+    rutas_cercanas = []
+    for id in ids_paradas_finales:
+        parada = Punto.objects.filter(id = id)[0]
+        rutas_cercanas.append(parada.ruta)
+
+    print("Rutas cercanas ", rutas_cercanas)
+
+    # Obtener las paradas de cada ruta (no los puntos normales)
+    paradas_rutas_cercanas = []
+    for ruta in rutas_cercanas:
+        paradas_rutas_cercanas.append(Punto.objects.filter(ruta = ruta, esParada = True))
+
+    print("Paradas de rutas ", paradas_rutas_cercanas)
+
+    # Obtengo la parada mas cercana a mi posicion actual
+    id_parada_mas_cercana = get_n_nearest_points(1, paradas_rutas_cercanas, usr_lat, usr_long)
+
+    print("Id parada mas cercana: ", id_parada_mas_cercana)
+
+    parada_mas_cercana = Punto.objects.filter(id = id_parada_mas_cercana[0])
+
+    print("Parada mas cercana ", parada_mas_cercana)
+
+    # Serializar las rutas cercanas a JSON
+    resultado = []
+    for ruta in rutas_cercanas:
+        resultado.append(ruta_a_dicc(ruta.id))
+
+    print("Resultado ", resultado)
+
+    # Se retorna las rutas mas cercanas y las coordenadas de la parada a la cual debo ir
+    return HttpResponse(json.dumps({"rutas":resultado, "pnt_lat" : parada_mas_cercana[0].latitud, \
+                                    "pnt_lng" : parada_mas_cercana[0].longitud}))
+
+'''
+    Retorna los n puntos mas cercanos a (lat, long) en el mapa
+'''
+def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
+
+    final_dest_lat = abs(dest_lat)
+    final_dest_lon = abs(dest_lon)
+    final_distances = []
+
+    i = 0
+    while(i < n):
+
+        latitud_actual = 0
+        longitud_actual = 0
+        punto_id = -1
+
+        # Se verifica si el objeto es un punto literal o un QuerySet con un punto dentro
+        if(isinstance(puntos[1], QuerySet)):
+            latitud_actual = puntos[i][0].latitud
+            longitud_actual = puntos[i][0].longitud
+            punto_id = puntos[i][0].id
+        else:
+            latitud_actual = puntos[i].latitud
+            longitud_actual = puntos[i].longitud
+            punto_id = puntos[i].id
+
+        # Formula Pitagoras
+        cateto_a = abs(latitud_actual - final_dest_lat)
+        cateto_b = abs(longitud_actual - final_dest_lon)
+        point_distance = math.sqrt(cateto_a**2 + cateto_b**2)
+
+        # Guardar elementos (id, distancia al destino) en la lista final
+        final_distances.append((punto_id, point_distance))
+        i += 1
+
+    # Retorna la distancia dentro de una tupla de final_distances
+    def get_distance_in_tuple(tuple_element):
+        return tuple_element[1]
+
+    # Ordenar de manera ascendente y por distancia, no por id
+    final_distances.sort(key = get_distance_in_tuple)
+    # Obtener todos los ids de la lista de tuplas
+    map_iterator = map(lambda tuple_element: tuple_element[0], final_distances)
+
+    return list(map_iterator) # Convert it to list

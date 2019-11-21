@@ -1,7 +1,26 @@
 var mapa;
 var puntos_ref = []; // lista de los puntos de referencia para buscar
 var polygon_area;
+var destiny_coords = [];
 var layer_group; // todos los elementos en el mapa
+
+// Icono de la parada mas cerca a mi posicion
+var closestStopIcon = new L.Icon({
+  iconUrl: 'https://www.uv.es/uwm/imatges/GMaps/markers/red-marker.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+// Icono del destino al cual deseo ir
+var destinyMarkerIcon = new L.Icon({
+  iconUrl: 'https://icons-for-free.com/iconfiles/png/512/my+location+48px-131987943379423279.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 // Dibuja un rectangulo marcado por los puntos_ref dentro del mapa
 function dibujar_area(){
@@ -57,18 +76,25 @@ function habilitar_seleccionar_area(){
     });
 
     mapa.on("click",function(e){
-        if(puntos_ref.length < 2){
-            puntos_ref.push(e.latlng);
-            console.log("punto agregado "+puntos_ref);
-
-            actualizar_inputs();
-
-            if(puntos_ref.length == 2){
-                dibujar_area();
-            }
+        // Habilitar click para agregar punto de destino
+        if($("#criterio").val() == "parada_cercana") {
+          console.log("Destiny added");
+          var destinyMarker = L.marker(e.latlng, {icon: destinyMarkerIcon});
+          destiny_coords = [e.latlng.lat, e.latlng.lng];
+          destinyMarker.addTo(mapa);
         }
-        else{
-            console.log("refs llenos");
+        else {
+          if(puntos_ref.length < 2){
+              puntos_ref.push(e.latlng);
+              console.log("punto agregado "+puntos_ref);
+
+              actualizar_inputs();
+
+              if(puntos_ref.length == 2){
+                  dibujar_area();
+              }
+          }
+          else console.log("refs llenos");
         }
     });
 }
@@ -109,6 +135,14 @@ function pedir_rutas(){
         coords2 = $("#Punto2").val();
         api_url = `/api/rutas_dentro/${coords1}/${coords2}/paradas/`
     }
+    else if(criterio == "parada_cercana"){
+        var usr_lat = MY_COORDS[0];
+        var usr_long = MY_COORDS[1];
+        var dest_lat = destiny_coords[0];
+        var dest_long = destiny_coords[1];
+        console.log(dest_lat, dest_long);
+        api_url = `/api/parada_mas_cercana/${usr_lat},${usr_long}/${dest_lat},${dest_long}/`
+    }
     else{
         console.log(`criterio desconocido: ${criterio}`)
     }
@@ -124,12 +158,12 @@ function pedir_rutas(){
         obj_json.rutas.forEach(function(ruta){
             var coords = [];
             ruta.puntos.forEach(function(punto){
-                coords.push([punto.lat, punto.lon]); // agregar el punto a la traza
-                if(punto.esParada){
-                    marcadores.push(L.marker([punto.lat, punto.lon]));
-                }
+              coords.push([punto.lat, punto.lon]); // agregar el punto a la traza
+              if(punto.esParada){
+                  marcadores.push(L.marker([punto.lat, punto.lon]));
+              }
             });
-            polylines.push(L.polyline(coords,{color:"green"}));
+            polylines.push(L.polyline(coords, {color:"green"}));
             console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
         });
 
