@@ -38,4 +38,4 @@ class Log(models.Model):
     nombre_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     accion = models.CharField(max_length=30)
     tabla = models.CharField(max_length=30)
-    hora = models.TimeField(auto_now=True) # don't need to pass this value to constructor
+    hora = models.DateTimeField(auto_now_add=True) # don't need to pass this value to constructor
