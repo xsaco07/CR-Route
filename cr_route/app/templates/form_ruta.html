@@ -12,6 +12,10 @@
                 url:"/empresa/listar/meta/"
             }).done(function(response){
                 $(selectElementID).html(response);
+
+                // Actualizar los datos en la base 
+                $("select[name='rampa'").val("{{rampa}}");
+                $("select[name='id_empresa']").val("{{empresa}}");
             });
         });
     </script>

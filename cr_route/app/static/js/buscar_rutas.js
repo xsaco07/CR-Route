@@ -120,6 +120,12 @@ function configurar_mapa() {
     center_map(mapa);
 }
 
+function getRandomColor(){
+    const colores = ["green","red","blue","yellow","magenta","cyan","purple"];
+    const i = Math.round(Math.random()*(colores.length-1));
+    return colores[i];
+}
+
 function pedir_rutas(){
     // Ver qué criterio se está usando
     // y construir url según el criterio
@@ -184,8 +190,11 @@ function pedir_rutas(){
               else marcadores.push(L.marker([punto.lat, punto.lon]));
 
             });
+            
+            var line = L.polyline(coords, {color:getRandomColor()});
+            line.bindTooltip(`Ruta #${ruta.numero_ruta} ‎${ruta.descripcion} ₡${ruta.precio}`).openTooltip();
+            polylines.push(line);
 
-            polylines.push(L.polyline(coords, {color:"green"}));
             console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
         });
 

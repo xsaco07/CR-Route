@@ -35,6 +35,12 @@ function onMapClick(e) {
     newMarker = L.marker(e.latlng);
     newMarker.addTo(mymap);
 
+    var lat = e.latlng.lat;
+    var lng = e.latlng.lng;
+
+    // Save marker in array
+    markers.push(newMarker);
+
     // Add function on click event
     newMarker.on('click',function(){
       remove_marker(this);
@@ -47,6 +53,12 @@ function onMapClick(e) {
     newMarker = L.marker(e.latlng, {icon: greenIcon});
     newMarker.addTo(mymap);
 
+    var lat = e.latlng.lat;
+    var lng = e.latlng.lng;
+
+    // Save marker in array
+    markers.push(newMarker);
+    
     // Always deploy the form when is added to the map
     deploy_stop_form(newMarker, "")
 
@@ -56,11 +68,6 @@ function onMapClick(e) {
 
   }
 
-  var lat = e.latlng.lat;
-  var lng = e.latlng.lng;
-
-  // Save marker in array
-  markers.push(newMarker);
   // Save new coordenates in array
   coordenates.push([lat, lng]);
 
@@ -97,7 +104,12 @@ function deploy_stop_form(marker, description) {
   <div class='text-center'> \
   <input type='button' class='btn btn-success' value='Listo' class='text-center' id='desc-btn'> \
   </div>";
-
+  
+  // Guardar descripcion del punto siembre ( no requerir clickear describir)
+  var desc_position = markers.indexOf(marker);
+  descriptions[desc_position] = description;
+  console.log("DESCS",descriptions);
+  
   $('#desc-btn-option').click(function() {
 
     marker.bindPopup(add_desc_html).openPopup();
@@ -157,6 +169,7 @@ function get_all_points_json() {
 }
 
 function remove_marker(marker) {
+  console.log("Marker removed");
   polylines = [];
   p_group.remove();
   marker.remove();
@@ -194,13 +207,11 @@ function draw_loaded_path() {
     if(json_paradas[i].esParada) {
 
       newMarker = L.marker(current_coords, {icon: greenIcon});
+      markers.push(newMarker);
 
       newMarker.on('click', function() {
-        console.log(markers.indexOf(newMarker));
         deploy_stop_form(newMarker, description);
       });
-
-      markers.push(newMarker);
 
       // Save description from json into descr array always
       var desc_position = markers.indexOf(newMarker);
@@ -232,8 +243,12 @@ function draw_loaded_path() {
 
 function cleanMap() {
 
+  console.log("Cleaning");
+
   polylines = [];
   coordenates = [];
+  descriptions = [];
+
   p_group.remove();
   p_group = L.layerGroup(polylines).addTo(mymap);
 
@@ -241,6 +256,11 @@ function cleanMap() {
   markers.map(function(marker) {
     marker.remove();
   });
+
+  // Empty the array
+  markers = [];
+
+  console.log("Markers: " + markers);
 }
 
 // Takes a coordenates array and draws them on the map
