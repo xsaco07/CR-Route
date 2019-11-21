@@ -41,7 +41,7 @@ def editar_ruta(request, id):
         ruta = Ruta.objects.filter(id=id)[0]
         if request.method == "POST":
             data = request.POST
-            ruta.empresa = Empresa.objects.last()
+            ruta.empresa = Empresa.objects.filter(id=data["id_empresa"]).last()
             ruta.descripcion = data["descripcion"]
             ruta.precio = data["precio"]
             ruta.horario = data["horario"]
@@ -50,21 +50,22 @@ def editar_ruta(request, id):
             ruta.save()
 
             crear_paradas(data, ruta)
+
             context = {"id": request.session['id'], "session_key": request.session.session_key}
             return redirect('/ruta/listar', context=context)
 
         elif request.method == "GET":
 
             paradas = Punto.objects.filter(ruta=ruta).order_by('serial')
-            paradas_coords = []
+            json_paradas = {}
 
             for parada in paradas:
-                print(parada.longitud)
-                paradas_coords += [[parada.latitud, parada.longitud]]
+                json_paradas[parada.serial] = {"latitud" : parada.latitud, "longitud" : parada.longitud, "esParada" : parada.esParada, "descripcion" : parada.descripcion}
 
+            print(json_paradas)
             context = model_to_dict(ruta)
             context["action"] = "/ruta/editar/"+str(id)+"/"
-            context['paradas'] = paradas_coords
+            context["paradas"] = json.dumps(json_paradas)
             context["id"] = request.session['id']
             context["session_key"] = request.session.session_key
             return render(request, "editar_crear_rutas.html", context=context)
@@ -103,7 +104,7 @@ def crear_paradas(data, ruta):
 
     # Parse string to json object
     json_paradas = json.loads(data['puntos'])
-
+    print("Puntos string", data['puntos'])
     # Borrar paradas previamente asociadas
     Punto.objects.filter(ruta=ruta).delete()
 
@@ -115,12 +116,8 @@ def crear_paradas(data, ruta):
         parada.latitud = json_paradas[serial]['latitud']
         parada.longitud = json_paradas[serial]['longitud']
         parada.esParada = json_paradas[serial]['esParada']
+        parada.descripcion = json_paradas[serial]['descripcion']
         parada.save()
-
-# Divide list in chunks
-def divide_chunks(l, n):
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
 
 def borrar_empresa(request, id):
     if request.session.session_key:

@@ -3,10 +3,10 @@ var startPoint = {
   longitude: -84.3148551
 };
 
-var markers = [];
-var coordenates = [];
-var polylines = []
-var descriptions = [];
+let markers = [];
+let coordenates = [];
+let polylines = [];
+let descriptions = [];
 var mymap = L.map('map').setView([startPoint.latitude, startPoint.longitude], 16);
 var p_group = L.layerGroup(polylines).addTo(mymap);
 var stop_flag = false;
@@ -17,17 +17,17 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19
 }).addTo(mymap);
 
+var greenIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 function onMapClick(e) {
 
-  var greenIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-
-  var newMarker = null;
+  let newMarker = null;
 
   // Is a stop?
   if(!stop_flag){
@@ -48,10 +48,10 @@ function onMapClick(e) {
     newMarker.addTo(mymap);
 
     // Always deploy the form when is added to the map
-    deploy_stop_form(newMarker)
+    deploy_stop_form(newMarker, "")
 
     newMarker.on('click', function() {
-      deploy_stop_form(newMarker);
+      deploy_stop_form(newMarker, "");
     });
 
   }
@@ -60,7 +60,6 @@ function onMapClick(e) {
   var lng = e.latlng.lng;
 
   // Save marker in array
-  // The description is empty unless the user intentionally fills it
   markers.push(newMarker);
   // Save new coordenates in array
   coordenates.push([lat, lng]);
@@ -71,14 +70,12 @@ function onMapClick(e) {
 
 // Shows the delete and add description options to the stop marker
 // Add event handlers to both buttons
-function deploy_stop_form(marker) {
-
+// The description param is shown whe user is editing the route
+function deploy_stop_form(marker, description) {
+  console.log(markers.indexOf(marker));
   // Delete elements if they already exists in DOM
   if($('#desc-btn-option') != null) $('#desc-btn-option').remove();
   if($('#delete-btn-option') != null) $('#delete-btn-option').remove();
-
-  // Delete all h5 elements in DOM
-  $('.h5').remove();
 
   // Bind html to popup to make an markers_function
   // Add a description or delete it
@@ -105,6 +102,9 @@ function deploy_stop_form(marker) {
 
     marker.bindPopup(add_desc_html).openPopup();
 
+    // Set description to input field
+    $("#desc-input").val(description);
+
     // Save the descripction when btn is pressed
     $("#desc-btn").click(function() {
       var current_stop_description = $("#desc-input").val();
@@ -128,10 +128,11 @@ function deploy_stop_form(marker) {
 // is_stop: false if stop_flag was false when it was added to the map
 function marker_to_json(marker) {
 
-  // If the description is not set means that is not a stop
   var is_stop = false;
   var description = "";
-  if(descriptions[markers.indexOf(marker)] != null){
+
+  // If the description is not set means that is not a stop
+  if(descriptions[markers.indexOf(marker)] != undefined){
     is_stop = true;
     description = descriptions[markers.indexOf(marker)];
   }
@@ -176,28 +177,53 @@ function remove_marker(marker) {
 // It takes the points from DB and draws the path through out the map
 function draw_loaded_path() {
   markers = [];
+  descriptions = [];
   var final_coords = []
-  var paradas_coords = JSON.parse(paradas); // Parse string to array of floats
+  let json_paradas = JSON.parse(paradas); // Parse json string to js object
 
-  for (var i = 0; i < paradas_coords.length; i++) {
+  console.log(json_paradas);
+
+  for (let i = 0; i < Object.keys(json_paradas).length; i++) {
+
+    let newMarker = null;
+    let description = json_paradas[i].descripcion;
+    var current_coords = [json_paradas[i].latitud, json_paradas[i].longitud];
 
     // Create the markers
-    var newMarker = L.marker(paradas_coords[i]);
-    newMarker.addTo(mymap);
-    newMarker.on('click',function(){markers_function(this);});
-    markers.push(newMarker);
+    // Use green icon if point is a stop
+    if(json_paradas[i].esParada) {
 
-    final_coords.push.apply(final_coords, [paradas_coords[i]]);
+      newMarker = L.marker(current_coords, {icon: greenIcon});
+
+      newMarker.on('click', function() {
+        console.log(markers.indexOf(newMarker));
+        deploy_stop_form(newMarker, description);
+      });
+
+      markers.push(newMarker);
+
+      // Save description from json into descr array always
+      var desc_position = markers.indexOf(newMarker);
+      descriptions[desc_position] = description;
+
+    }
+    else {
+      newMarker = L.marker(current_coords);
+      newMarker.on('click',function(){remove_marker(this);});
+      markers.push(newMarker);
+    }
+
+    newMarker.addTo(mymap);
+
+    final_coords.push.apply(final_coords, [current_coords]);
 
   }
 
   // Clean polyline
   polylines = [];
   p_group.remove();
-
   // Draw polyline
   draw_path(final_coords);
-
   // Clear coords array
   coordenates = [];
   // Set coordenates parsed from django view
@@ -217,9 +243,9 @@ function cleanMap() {
   });
 }
 
-// Takes an coordenates array and draws them on the map
+// Takes a coordenates array and draws them on the map
 function draw_path(coordenates) {
-  polylines.push(L.polyline(coordenates, {color: 'red'}));
+  polylines.push(L.polyline([coordenates], {color: 'red'}));
   p_group = L.layerGroup(polylines).addTo(mymap);
 }
 

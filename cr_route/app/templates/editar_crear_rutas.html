@@ -49,7 +49,7 @@
     </div>
 
     <script type="text/javascript">
-      var paradas = "{{paradas}}";
+      let paradas = '{{paradas | safe}}';
     </script>
 
     <script src="{% static 'js/rutas.js' %}" charset="utf-8"></script>
