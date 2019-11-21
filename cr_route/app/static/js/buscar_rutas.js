@@ -22,6 +22,14 @@ var destinyMarkerIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+var greenIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 // Dibuja un rectangulo marcado por los puntos_ref dentro del mapa
 function dibujar_area(){
     if(puntos_ref.length == 2){
@@ -156,13 +164,27 @@ function pedir_rutas(){
         var obj_json = JSON.parse(data);
 
         obj_json.rutas.forEach(function(ruta){
+
             var coords = [];
+
             ruta.puntos.forEach(function(punto){
+
               coords.push([punto.lat, punto.lon]); // agregar el punto a la traza
+
               if(punto.esParada){
-                  marcadores.push(L.marker([punto.lat, punto.lon]));
+
+                  // Es el punto mas cercano?
+                  console.log("Lat1 " + punto.lat + " " + "Lat2 " + obj_json.pnt_lat);
+                  console.log("Lng1 " + punto.lon + " " + "Lng2 " + obj_json.pnt_lng);
+                  if(punto.lat == obj_json.pnt_lat && punto.lon == obj_json.pnt_lng){
+                    marcadores.push(L.marker([punto.lat, punto.lon], {icon : closestStopIcon}));
+                  }
+                  else marcadores.push(L.marker([punto.lat, punto.lon], {icon : greenIcon}));
               }
+              else marcadores.push(L.marker([punto.lat, punto.lon]));
+
             });
+
             polylines.push(L.polyline(coords, {color:"green"}));
             console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
         });

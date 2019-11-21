@@ -558,8 +558,10 @@ def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long):
     puntos_finales = Punto.objects.raw(
         "select *, max(serial) from app_punto group by ruta_id;")
 
+    print("Puntos finales ", len(puntos_finales))
+
     # Obtener los ids de las paradas finales mas cercas al destino
-    ids_paradas_finales = get_n_nearest_points(3, puntos_finales, dest_lat, dest_long)
+    ids_paradas_finales = get_n_nearest_points(len(puntos_finales), puntos_finales, dest_lat, dest_long)
 
     print("Ids: ", ids_paradas_finales)
 
@@ -571,10 +573,12 @@ def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long):
 
     print("Rutas cercanas ", rutas_cercanas)
 
-    # Obtener las paradas de cada ruta (no los puntos normales)
+    # Obtener las paradas de cada ruta (no los puntos normales) y dejarlos en una lista
     paradas_rutas_cercanas = []
     for ruta in rutas_cercanas:
-        paradas_rutas_cercanas.append(Punto.objects.filter(ruta = ruta, esParada = True))
+        paradas_ruta_actual = Punto.objects.filter(ruta = ruta, esParada = True)
+        for parada in paradas_ruta_actual:
+            paradas_rutas_cercanas.append(parada)
 
     print("Paradas de rutas ", paradas_rutas_cercanas)
 
@@ -608,7 +612,8 @@ def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
     final_distances = []
 
     i = 0
-    while(i < n):
+    print("Len puntos ", len(puntos))
+    while(i < len(puntos)):
 
         latitud_actual = 0
         longitud_actual = 0
@@ -631,6 +636,7 @@ def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
 
         # Guardar elementos (id, distancia al destino) en la lista final
         final_distances.append((punto_id, point_distance))
+        print("Append")
         i += 1
 
     # Retorna la distancia dentro de una tupla de final_distances
@@ -639,7 +645,7 @@ def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
 
     # Ordenar de manera ascendente y por distancia, no por id
     final_distances.sort(key = get_distance_in_tuple)
+    print("Final distances: ", final_distances)
     # Obtener todos los ids de la lista de tuplas
     map_iterator = map(lambda tuple_element: tuple_element[0], final_distances)
-
-    return list(map_iterator) # Convert it to list
+    return list(map_iterator)[:n] # Convert it to list and return only the first n elements
