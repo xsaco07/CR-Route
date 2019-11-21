@@ -197,7 +197,11 @@ Buscar rutas
                         marcadores.push(L.marker([punto.lat, punto.lon]));
                     }
                 });
-                polylines.push(L.polyline(coords,{color:"green"}));
+                var line = L.polyline(coords,{color:"green"});
+
+                line.bindTooltip(`Ruta #${ruta.numero_ruta} ‎${ruta.descripcion} ₡${ruta.precio}`).openTooltip();
+
+                polylines.push(line);
                 console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
             });
 
