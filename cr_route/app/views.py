@@ -17,9 +17,18 @@ def home(request):
     except:
         return render(request, 'home.html')
 
-def listar_rutas(request):
+def listar_rutas(request, meta):
     rutas = Ruta.objects.all()
     try:
+        if(meta):
+            result = []
+            for ruta in rutas:
+                result.append({
+                    "descripcion":ruta.descripcion,
+                    "empresa":ruta.empresa.nombre,
+                    "id":ruta.id
+                    })
+            return HttpResponse(json.dumps(result))
         context = {'rutas':rutas, "id": request.session['id'], "session_key": request.session.session_key}
         return render(request, 'admRutas.html', context=context)
     except:
@@ -96,7 +105,7 @@ def insertar_ruta(request):
 
             messages.info(request, 'Ruta creada exitosamente.')
             registrar_log(request.session['usuario_obj'], "Registró una nueva ruta", "Ruta")
-            return listar_rutas(request)
+            return listar_rutas(request, meta=False)
 
         elif request.method == "GET":
             context = {"action":"/ruta/insertar/", "id": request.session['id'], "session_key": request.session.session_key}
@@ -322,7 +331,8 @@ def puntos_de_ruta(id_ruta):
         puntos.append({
             "serial":punto.serial,
             "lat":punto.latitud,
-            "lon":punto.longitud
+            "lon":punto.longitud,
+            "esParada": punto.esParada
         })
     return puntos
 
@@ -407,8 +417,9 @@ def esta_contenido(punto_ref1, punto_ref2, punto_eval):
 
 '''
     Retornar las rutas que tienen destino final dentro de un rectangulo
+    criterio = ["paradas","destinos"]
 '''
-def api_rutas_dentro(request, lat1, lon1, lat2, lon2):
+def api_rutas_dentro(request, lat1, lon1, lat2, lon2, criterio):
     # Parsear los parametros a floats
     (lat1, lon1, lat2, lon2) = map(lambda x: float(x), (lat1, lon1, lat2, lon2))
 
@@ -416,22 +427,42 @@ def api_rutas_dentro(request, lat1, lon1, lat2, lon2):
     ref1 = (lat1, lon1)
     ref2 = (lat2, lon2)
 
-    # Obtener las ultimas paradas de las rutas
-    destinos = Punto.objects.raw(
-        "select *, max(serial) from app_punto group by ruta_id;")
+    if criterio=="paradas":
+        # Obtener todos los puntos que son paradas
+        paradas = Punto.objects.filter(esParada=True)
 
-    ids_rutas = []
+        ids_rutas = []
+        # Filtrar los que están dentro del límite
+        for parada in paradas:
+            if(esta_contenido(ref1, ref2, (parada.latitud, parada.longitud))):
+                ids_rutas.append(parada.ruta.id)
 
-    # Filtrar las que quedan dentro los rangos de búsqueda
-    for dest in destinos:
-        if(esta_contenido(ref1, ref2, (dest.latitud, dest.longitud))):
-            ids_rutas.append(dest.ruta.id)
+        rutas = []
+        for id in ids_rutas:
+            rutas.append(ruta_a_dicc(id))
 
-    rutas = []
-    for id in ids_rutas:
-        rutas.append(ruta_a_dicc(id))
+        return HttpResponse(json.dumps({"rutas":rutas}))
 
-    return HttpResponse(json.dumps({"rutas":rutas}))
+    elif criterio == "destinos":
+        # Obtener las ultimas paradas de las rutas
+        destinos = Punto.objects.raw(
+            "select *, max(serial) from app_punto group by ruta_id;")
+
+        ids_rutas = []
+
+        # Filtrar las que quedan dentro los rangos de búsqueda
+        for dest in destinos:
+            if(esta_contenido(ref1, ref2, (dest.latitud, dest.longitud))):
+                ids_rutas.append(dest.ruta.id)
+
+        rutas = []
+        for id in ids_rutas:
+            rutas.append(ruta_a_dicc(id))
+
+        return HttpResponse(json.dumps({"rutas":rutas}))
+    else:
+        return HttpResponse(f"Criterio invalido: {criterio}")
+    
 
 
 '''
@@ -464,6 +495,21 @@ def registrar_log(nombre_usuario, accion, tabla):
     log.save()
 
 '''
+    Página para buscar una ruta según diferentes criterios
+'''
+def buscar_rutas(request):
+    return render(request, "buscar_rutas.html",{})
+
+
+def api_ruta_por_id(request, id_ruta):
+    id = int (id_ruta) 
+    ruta = Ruta.objects.filter(id=id)[0]
+
+    resultado = {"rutas":[ruta_a_dicc(ruta.id)]}
+
+    return HttpResponse(json.dumps(resultado))
+
+'''  
     Los logs se buscarán por fecha de inicio y fecha final 
 '''
 
