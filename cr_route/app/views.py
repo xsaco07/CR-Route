@@ -30,6 +30,7 @@ def borrar_ruta(request, id):
         Ruta.objects.filter(id=id)[0].delete()
         try:
             context = {"id": request.session['id'], "session_key": request.session.session_key}
+            registrar_log(request.session['usuario_obj'], "Eliminó una ruta", "Ruta")
             return redirect('/ruta/listar', context=context)
         except:
             return redirect('/ruta/listar')
@@ -52,6 +53,7 @@ def editar_ruta(request, id):
 
             crear_paradas(data, ruta)
             context = {"id": request.session['id'], "session_key": request.session.session_key}
+            registrar_log(request.session['usuario_obj'], "Editó una ruta", "Ruta")
             return redirect('/ruta/listar', context=context)
 
         elif request.method == "GET":
@@ -91,7 +93,7 @@ def insertar_ruta(request):
             crear_paradas(data, ruta)
 
             messages.info(request, 'Ruta creada exitosamente.')
-            context = {"id": request.session['id'], "session_key": request.session.session_key}
+            registrar_log(request.session['usuario_obj'], "Registró una nueva ruta", "Ruta")
             return listar_rutas(request)
 
         elif request.method == "GET":
@@ -130,6 +132,7 @@ def divide_chunks(l, n):
 
 def borrar_empresa(request, id):
     if request.session.session_key:
+        registrar_log(request.session['usuario_obj'], "Borró una empresa", "Empresa")
         Empresa.objects.filter(id=id)[0].delete()
         return render(request,"form_empresa.html",{
             "info_message":"Empresa borrada correctamente. ¿Te gustaría agregar una nueva?",
@@ -152,6 +155,7 @@ def editar_empresa(request, id):
             empresa.longitud = data["longitud"]
             empresa.horario = data["horario"]
             empresa.save()
+            registrar_log(request.session['usuario_obj'], "Editó una empresa", "Empresa")
             return render(request,"form_empresa.html",{
                 "action":"empresa/insertar/",
                 "info_message":"¡Datos actualizados correctamente!",
@@ -195,6 +199,7 @@ def insertar_empresa(request):
             empresa.longitud = data["longitud"]
             empresa.horario = data["horario"]
             empresa.save()
+            registrar_log(request.session['usuario_obj'], "Registró una nueva empresa", "Empresa")
             return render(request, "form_empresa.html",{"info_message":"Empresa registrada exitosamente!", "id": request.session['id'], "session_key": request.session.session_key})
         elif request.method == "GET":
             context = {"action":"/empresa/insertar/", "id": request.session['id'], "session_key": request.session.session_key}
@@ -243,8 +248,10 @@ def iniciar_sesion(request):
                 if usuario.nombre_usuario == nombre_usuario and usuario.contrasena == contrasena:
                     request.session.create()
                     request.session['id'] = usuario.id
-                    context = {"id": request.session['id'], "session_key": request.session.session_key}
+                    request.session['usuario_obj'] = usuario
+                    context = {"id": usuario.id, "session_key": request.session.session_key}
                     request.session.set_expiry(600)
+                    registrar_log(request.session['usuario_obj'], "Inició sesión", "Usuario")
                     return render(request, "home.html", context=context)
                 context = {"mensaje": 'La contraseña que has introducido es incorrecta'}
                 return render(request, "iniciar_sesion.html", context=context)
@@ -269,7 +276,9 @@ def editar_usuario(request, id):
             usuario.apellido2 = data["apellido2"]
             usuario.contrasena = data["contrasena"]
             usuario.save()
-            context = {"mensaje": 'Usuario editado exitosamente'}
+            context = {"mensaje": 'Usuario editado exitosamente', "action":"/login/"}
+            registrar_log(request.session['usuario_obj'], "Editó su usuario", "Usuario")
+            request.session.flush()
             return render(request,"iniciar_sesion.html", context=context)
         elif request.method == "GET":
             context = model_to_dict(usuario)
@@ -285,7 +294,9 @@ def editar_usuario(request, id):
 def borrar_usuario(request, id):
     if request.session.session_key:
         Usuario.objects.filter(id=id)[0].delete()
-        context = {"mensaje": 'Usuario borrado correctamente.'}
+        context = {"mensaje": 'Usuario borrado correctamente.', "action":"/login/"}
+        registrar_log(request.session['usuario_obj'], "Eliminó su usuario", "Usuario")
+        request.session.flush()
         return render(request,"iniciar_sesion.html", context=context)
     else:
         return render(request, "home.html")
@@ -293,6 +304,7 @@ def borrar_usuario(request, id):
 @csrf_exempt
 def salir_sesion(request):
     if request.session.session_key:
+        registrar_log(request.session['usuario_obj'], "Cerró su sesion", "Usuario")
         request.session.flush()
         return redirect("/login/")
     else:
@@ -451,10 +463,17 @@ def ruta_a_dicc(id_ruta):
         "puntos": puntos
     }
 
+def registrar_log(nombre_usuario, accion, tabla):
+    log = Log()
+    log.nombre_usuario = nombre_usuario
+    log.accion = accion
+    log.tabla = tabla
+    log.save()
 
 '''
     Los logs se buscarán por fecha de inicio y fecha final 
 '''
+
 def buscar_logs(request):
     return render(request, "buscar_logs.html",{})
 
