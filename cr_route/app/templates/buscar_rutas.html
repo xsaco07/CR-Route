@@ -206,6 +206,7 @@ Buscar rutas
                     }
                 });
                 polylines.push(L.polyline(coords,{color:getRandomColor()}));
+                line.bindTooltip(`Ruta #${ruta.numero_ruta} ‎${ruta.descripcion} ₡${ruta.precio}`).openTooltip();
                 console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
             });
 
