@@ -165,15 +165,18 @@ Buscar rutas
             api_url = `/api/rutas_por_empresa/${id_empresa}/`
         }
         else if(criterio == "ruta"){
-
+            var num_ruta = $("#num_ruta").val();
+            api_url = `/api/ruta_por_id/${num_ruta}/`
         }
         else if(criterio == "destino"){
             coords1 = $("#Punto1").val();
             coords2 = $("#Punto2").val();
-            api_url = `/api/rutas_dentro/${coords1}/${coords2}/destinos`
+            api_url = `/api/rutas_dentro/${coords1}/${coords2}/destinos/`
         }
         else if(criterio == "paradas"){
-
+            coords1 = $("#Punto1").val();
+            coords2 = $("#Punto2").val();
+            api_url = `/api/rutas_dentro/${coords1}/${coords2}/paradas/`
         }
         else{
             console.log(`criterio desconocido: ${criterio}`)
@@ -192,11 +195,12 @@ Buscar rutas
                     coords.push([punto.lat, punto.lon]);
                 });
                 polylines.push(L.polyline(coords,{color:"green"}));
+                console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
             });
 
             // Pintar rutas recibidas en el mapa 
             L.layerGroup(polylines).addTo(mapa);
-            console.log("added");
+            
         });
 
     }
@@ -274,6 +278,7 @@ Buscar rutas
         var input = $(document.createElement("input"));
         input.attr("list", "lista_rutas");
         input.attr("placeholder", "Buscar...")
+        input.attr("id","num_ruta")
         input.append(lista); // agregar la lista dentro del input 
 
         // Agregar el input a la página 
@@ -329,6 +334,8 @@ Buscar rutas
     // Agregar un mapa a la página para que el usuario pueda delimitar el
     // área de búsqueda deseada 
     function form_por_paradas() {
+        // Es la misma cosa
+        form_por_destino();
     }
 </script>
 

@@ -504,3 +504,13 @@ def registrar_log(nombre_usuario, accion, tabla):
 '''
 def buscar_rutas(request):
     return render(request, "buscar_rutas.html",{})
+
+
+def api_ruta_por_id(request, id_ruta):
+    id = int (id_ruta) 
+    ruta = Ruta.objects.filter(id=id)[0]
+
+    resultado = {"rutas":[ruta_a_dicc(ruta.id)]}
+
+    return HttpResponse(json.dumps(resultado))
+
