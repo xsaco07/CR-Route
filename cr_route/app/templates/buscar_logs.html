@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+Buscar registro de actividad
+{% endblock title %}
+
+
+{% block mainContent %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <form>
+                <div class="form-group">
+                    <label for="inicio">Fecha de inicio</label>
+                    <input class="form-control" id="inicio" type="date">
+                </div>
+
+                <div class="form-group">
+                    <label for="fin">Fecha de fin</label>
+                    <input class="form-control" id="fin" type="date">
+                </div>
+
+                <button class="btn btn-primary">Buscar</button>
+                <script>
+                    function vaciar_tabla(){
+                        var tabla = document.getElementById("results");
+                        // Limpiar la tabla
+                        while(2 <= tabla.children.length){
+                            tabla.removeChild(tabla.children[1]);
+                            console.log("elem removed");
+                        }
+                    }
+
+                    $(document).ready(function(){
+                        $("form").submit(function(e){
+                            e.preventDefault(e); // evitar enviar el formulario 
+                        });
+
+                        $("button").on("click",function(){
+                            vaciar_tabla();
+
+                            var fecha_inicio = $("#inicio").val();
+                            var fecha_fin = $("#fin").val();
+
+                            $.ajax({
+                                url:`/api/buscar_logs/${fecha_inicio}/${fecha_fin}/`
+                            }).done(function(data){
+                                // parsear resultados
+                                var logs = JSON.parse(data);
+                                var table = $("table");
+
+                                logs.forEach(function(log){
+                                    var row = $(document.createElement("tr"));
+                                    const attrs = ["usuario","accion","tabla","fecha"];
+                                    attrs.forEach(function(elem){
+                                        var col = $(document.createElement("td"));
+                                        col.html(log[elem]);
+                                        row.append(col);
+                                    });
+                                    table.append(row);
+                                });
+                            });
+                        });
+                    });
+                </script>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <table class="table table-bordered" id="results">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Accion</th>
+                    <th>Tabla</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

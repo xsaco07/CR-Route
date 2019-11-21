@@ -18,11 +18,11 @@
             <a href="/contacto/" class="nav-link">Contáctenos</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">Acerca del proyecto</a>
+            <a href="#" class="nav-link">Acerca de</a>
           </li>
           {% if not session_key %}
               <li class="nav-item">
-                <a href="/login" class="nav-link">Iniciar sesión</a>
+                <a href="/login" class="nav-link">Ingresar</a>
               </li>
           {% endif %}
           {% if session_key %}
@@ -30,7 +30,7 @@
                 <a href="/usuario/editar/{{id}}" class="nav-link">Perfil</a>
               </li>
               <li class="nav-item">
-                <a href="/logout/" class="nav-link">Salir de la sesion</a>
+                <a href="/logout/" class="nav-link">Salir</a>
               </li>
           {% endif %}
         </ul>
