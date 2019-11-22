@@ -14,6 +14,14 @@
           <li class="nav-item">
             <a href="{% url 'rutas' %}" class="nav-link">Rutas</a>
           </li>
+          {% if session_key %}
+            <li class="nav-item">
+            <a href="{% url 'buscar_logs' %}" class="nav-link">Logs</a>
+            </li>
+          {% endif %}
+            <li class="nav-item">
+            <a href="{% url 'buscar_rutas' %}" class="nav-link">Consultas</a>
+            </li>
           <li class="nav-item">
             <a href="/contacto/" class="nav-link">Contáctenos</a>
           </li>

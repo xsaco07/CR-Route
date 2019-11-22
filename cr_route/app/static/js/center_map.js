@@ -25,5 +25,5 @@ function onRequestGranted (location){
     map.setView(MY_COORDS, 14);
 }
 function onRequestDenied(error){
-    alert("Error, couldn't get your location, sorry we can't locate you on the map");
+    alert("Error, no he podido localizarte, lo siento, no podemos localizarte en el mapa");
 }

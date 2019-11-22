@@ -38,9 +38,10 @@
 
       <br>
       <br>
-
+      {% if session_key %}
       <a class="interact-button" href="{% url 'editar_empresa' id=empresa.id %}"><i class="fas fa-pencil-alt"></i></a>
       <a class="interact-button" href="{% url 'borrar_empresa' id=empresa.id %}"><i class="fas fa-trash-alt"></i></a>
+      {% endif %}
 
     </div>
 

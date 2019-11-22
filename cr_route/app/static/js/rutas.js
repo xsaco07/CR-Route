@@ -1,6 +1,6 @@
 var startPoint = {
-  latitude: 10.0551648,
-  longitude: -84.3148551
+  latitude: 9.934009837107048,
+  longitude: -84.08452481031419
 };
 
 let markers = [];
