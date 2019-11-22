@@ -33,7 +33,9 @@ def listar_rutas(request, meta):
                     "id":ruta.id
                     })
             return HttpResponse(json.dumps(result))
-        context = {'rutas':rutas, "id": request.session['id'], "session_key": request.session.session_key}
+        context = {'rutas':rutas, "session_key": request.session.session_key}
+        if("id" in request.session):
+             context["id"] = request.session['id']
         return render(request, 'admRutas.html', context=context)
     except:
         context = {'rutas':rutas}
@@ -179,12 +181,17 @@ def editar_empresa(request, id):
 
 def listar_empresa(request, meta):
     empresas = Empresa.objects.all()
+    context = {
+        "empresas":empresas,
+        "session_key":request.session.session_key
+    }
+    if("id" in request.session):
+        context["id"] = request.session['id']
     if(meta):
         # only return metadata id and name
-        return render(request,"combo_options.html",{"empresas":empresas, "id": request.session['id'], "session_key": request.session.session_key})
+        return render(request,"combo_options.html", context)
     else:
         try:
-            context = {"empresas":empresas, "id": request.session['id'], "session_key": request.session.session_key}
             return render(request, 'admEmpresas.html', context=context)
         except:
             context = {"empresas":empresas}
@@ -502,7 +509,9 @@ def registrar_log(nombre_usuario, accion, tabla):
     Página para buscar una ruta según diferentes criterios
 '''
 def buscar_rutas(request):
-    context = {"id": request.session['id'], "session_key": request.session.session_key}
+    context = {"session_key": request.session.session_key}
+    if("id" in request.session):
+        context["id"] = request.session["id"]
     return render(request, "buscar_rutas.html",context=context)
 
 
