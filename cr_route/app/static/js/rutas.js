@@ -58,7 +58,7 @@ function onMapClick(e) {
 
     // Save marker in array
     markers.push(newMarker);
-    
+
     // Always deploy the form when is added to the map
     deploy_stop_form(newMarker, "")
 
@@ -104,12 +104,12 @@ function deploy_stop_form(marker, description) {
   <div class='text-center'> \
   <input type='button' class='btn btn-success' value='Listo' class='text-center' id='desc-btn'> \
   </div>";
-  
+
   // Guardar descripcion del punto siembre ( no requerir clickear describir)
   var desc_position = markers.indexOf(marker);
   descriptions[desc_position] = description;
   console.log("DESCS",descriptions);
-  
+
   $('#desc-btn-option').click(function() {
 
     marker.bindPopup(add_desc_html).openPopup();
@@ -275,6 +275,8 @@ function setFlag(input) {
 }
 
 $(document).ready(function() {
+
+  center_map(mymap);
 
   // Draw the path only when updating a route
   if(paradas) draw_loaded_path();
