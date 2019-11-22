@@ -256,7 +256,7 @@ def iniciar_sesion(request):
                     request.session['id'] = usuario.id
                     request.session['usuario_obj'] = usuario
                     context = {"id": usuario.id, "session_key": request.session.session_key}
-                    request.session.set_expiry(600)
+                    request.session.set_expiry(1200)
                     registrar_log(request.session['usuario_obj'], "Inició sesión", "Usuario")
                     return render(request, "home.html", context=context)
                 context = {"mensaje": 'La contraseña que has introducido es incorrecta'}
@@ -502,7 +502,8 @@ def registrar_log(nombre_usuario, accion, tabla):
     Página para buscar una ruta según diferentes criterios
 '''
 def buscar_rutas(request):
-    return render(request, "buscar_rutas.html",{})
+    context = {"id": request.session['id'], "session_key": request.session.session_key}
+    return render(request, "buscar_rutas.html",context=context)
 
 
 def api_ruta_por_id(request, id_ruta):
@@ -518,7 +519,11 @@ def api_ruta_por_id(request, id_ruta):
 '''
 
 def buscar_logs(request):
-    return render(request, "buscar_logs.html",{})
+    if request.session.session_key:
+        context = {"id": request.session['id'], "session_key": request.session.session_key}
+        return render(request, "buscar_logs.html",context=context)
+    else:
+        return render(request, "home.html")
 
 # convertir string -AAAA-MM-DD- a objeto datetime
 def convertir_fecha(string):
