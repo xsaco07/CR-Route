@@ -16,7 +16,7 @@ var closestStopIcon = new L.Icon({
 // Icono del destino al cual deseo ir
 var destinyMarkerIcon = new L.Icon({
   iconUrl: 'https://icons-for-free.com/iconfiles/png/512/my+location+48px-131987943379423279.png',
-  iconSize: [25, 41],
+  iconSize: [40, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
@@ -190,7 +190,7 @@ function pedir_rutas(){
               else marcadores.push(L.marker([punto.lat, punto.lon]));
 
             });
-            
+
             var line = L.polyline(coords, {color:getRandomColor()});
             line.bindTooltip(`Ruta #${ruta.numero_ruta} ‎${ruta.descripcion} ₡${ruta.precio}`).openTooltip();
             polylines.push(line);
