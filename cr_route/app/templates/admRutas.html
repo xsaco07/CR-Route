@@ -20,22 +20,38 @@
 
     <div class="container mt-5">
 
-        <div class="row">
+        <div class="row justify-content-center">
+
             {% if session_key %}
-          <div class="col-3 text-center">
-            <div class="card border-light">
-                <div class="card-body">
-                  <h5 class="card-title">¿Desea contribuir?</h5>
-                  <p class="card-text">Añada una nueva ruta</p>
-                  <a href="{% url 'insertar_ruta' %}"><i class="fas fa-plus" id="new-icon"></i></a>
+              <div class="col-6 text-center">
+                <div class="card border-light">
+                    <div class="card-body">
+                      <h5 class="card-title">¿Desea contribuir?</h5>
+                      <p class="card-text">Añada una nueva ruta</p>
+                    </div>
+                    <a href="{% url 'insertar_ruta' %}"><i class="icon fas fa-plus"></i></a>
+                    <div class="card-footer">
+                      <h6 class="text-muted">Puedes crear tantas rutas como requiera.</h6>
+                    </div>
                 </div>
-                <div class="card-footer">
-                  <h6 class="text-muted">Puedes crear tantas rutas como requiera.</h6>
-                </div>
-            </div>
-          </div>
+              </div>
             {% endif %}
 
+            <div class="col-6 text-center">
+              <div class="card border-light">
+                  <div class="card-body">
+                    <h5 class="card-title">¿Cómo encontrar rutas específicas?</h5>
+                    <p class="card-text">Búsquelas acá</p>
+                    <a href="{% url 'buscar_rutas' %}"><i class="icon fas fa-search-location"></i></a>
+                  </div>
+                  <div class="card-footer">
+                    <h6 class="text-muted">Puedes buscar rutas por destino, empresa, etc.</h6>
+                  </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
           {% for ruta in rutas %}
 
             <div class="col-3 text-center">
@@ -87,8 +103,8 @@
             </div>
 
           {% endfor %}
-
         </div>
+
     </div>
 
 {% endblock mainContent %}

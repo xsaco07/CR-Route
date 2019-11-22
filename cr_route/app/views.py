@@ -650,9 +650,9 @@ def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
         print("Append")
         i += 1
 
-# Retorna la distancia dentro de una tupla de final_distances
-def get_distance_in_tuple(tuple_element):
-    return tuple_element[1]
+    # Retorna la distancia dentro de una tupla de final_distances
+    def get_distance_in_tuple(tuple_element):
+        return tuple_element[1]
 
     # Ordenar de manera ascendente y por distancia, no por id
     final_distances.sort(key = get_distance_in_tuple)
@@ -666,7 +666,7 @@ def get_distance_in_tuple(tuple_element):
 def api_rutas_por_tiempo(request, minutos):
     # Filtrar las rutas que duran la mitad del tiempo o menos
     # porque sería viaje ida y vuelta
-    
+
     rutas = []
 
     for ruta in Ruta.objects.all():

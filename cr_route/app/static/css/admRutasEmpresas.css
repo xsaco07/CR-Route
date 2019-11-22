@@ -24,13 +24,13 @@ body {
   background-color: #F1F1F1;
 }
 
-#new-icon {
+.icon {
   color: var(--secondary-color);
   font-size: 40px;
   padding: 10px;
 }
 
-#new-icon:hover {
+.icon:hover {
   /* font-size: 46px; */
   color: #B10000;
 }
