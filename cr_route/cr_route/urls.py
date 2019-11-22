@@ -44,6 +44,6 @@ urlpatterns = [
     path('buscar_rutas/', buscar_rutas),
     path('api/buscar_logs/<slug:fecha_inicio>/<slug:fecha_fin>/', api_buscar_logs),
     path('api/rutas_dentro/<str:lat1>,<str:lon1>/<str:lat2>,<str:lon2>/', api_rutas_dentro),
-    path('api/parada_mas_cercana/<str:usr_lat>,<str:usr_long>/<str:dest_lat>,<str:dest_long>/', api_parada_mas_cercana),
+    path('api/parada_mas_cercana/<str:usr_lat>,<str:usr_long>/<str:dest_lat>,<str:dest_long>/<int:rampa_required>', api_parada_mas_cercana),
 
 ]

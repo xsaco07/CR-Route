@@ -548,15 +548,21 @@ def api_buscar_logs(request, fecha_inicio, fecha_fin):
         })
     return HttpResponse(json.dumps(result))
 
-def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long):
+def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long, rampa_required):
 
     # Parsear los parametros a floats
     (usr_lat, usr_long, dest_lat, dest_long) = map(lambda x: float(x), (usr_lat, usr_long, dest_lat, dest_long))
 
     # Obtener las ultimas paradas de cada ruta
     # TODO: optimizar esta consulta para que no traiga TODOS los puntos finales
-    puntos_finales = Punto.objects.raw(
+    if (not bool(rampa_required)):
+        print("NO OCUPA RAMPA")
+        puntos_finales = Punto.objects.raw(
         "select *, max(serial) from app_punto group by ruta_id;")
+    else:
+        print("OCUPA RAMPA")
+        puntos_finales = Punto.objects.raw(
+        "select *, max(serial) from app_punto inner join app_ruta on ruta_id = app_ruta.id where app_ruta.rampa = 1 group by ruta_id;")
 
     print("Puntos finales ", len(puntos_finales))
 
