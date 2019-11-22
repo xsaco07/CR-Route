@@ -4,6 +4,9 @@ var polygon_area;
 var destiny_coords = [];
 var layer_group; // todos los elementos en el mapa
 
+const FALSE = 0
+const TRUE = 1
+
 // Icono de la parada mas cerca a mi posicion
 var closestStopIcon = new L.Icon({
   iconUrl: 'https://www.uv.es/uwm/imatges/GMaps/markers/red-marker.png',
@@ -85,7 +88,7 @@ function habilitar_seleccionar_area(){
 
     mapa.on("click",function(e){
         // Habilitar click para agregar punto de destino
-        if($("#criterio").val() == "parada_cercana") {
+        if($("#criterio").val() == "parada_cercana" || $("#criterio").val() == "parada_cercana_rampa") {
           console.log("Destiny added");
           var destinyMarker = L.marker(e.latlng, {icon: destinyMarkerIcon});
           destiny_coords = [e.latlng.lat, e.latlng.lng];
@@ -155,7 +158,15 @@ function pedir_rutas(){
         var dest_lat = destiny_coords[0];
         var dest_long = destiny_coords[1];
         console.log(dest_lat, dest_long);
-        api_url = `/api/parada_mas_cercana/${usr_lat},${usr_long}/${dest_lat},${dest_long}/`
+        api_url = `/api/parada_mas_cercana/${usr_lat},${usr_long}/${dest_lat},${dest_long}/${FALSE}`
+    }
+    else if(criterio == "parada_cercana_rampa"){
+        var usr_lat = MY_COORDS[0];
+        var usr_long = MY_COORDS[1];
+        var dest_lat = destiny_coords[0];
+        var dest_long = destiny_coords[1];
+        console.log(dest_lat, dest_long);
+        api_url = `/api/parada_mas_cercana/${usr_lat},${usr_long}/${dest_lat},${dest_long}/${TRUE}`
     }
     else if(criterio == "tiempo"){
         // Buscar valor el form 
