@@ -168,6 +168,12 @@ function pedir_rutas(){
         console.log(dest_lat, dest_long);
         api_url = `/api/parada_mas_cercana/${usr_lat},${usr_long}/${dest_lat},${dest_long}/${TRUE}`
     }
+    else if(criterio == "tiempo"){
+        // Buscar valor el form 
+        var tiempo = $("#minutos").val();
+
+        api_url = `/api/rutas_por_tiempo/${tiempo}/`
+    }
     else{
         console.log(`criterio desconocido: ${criterio}`)
     }
@@ -267,7 +273,24 @@ function criterio_cambiado() {
         case "paradas":
             form_por_paradas();
             break;
+        case "tiempo":
+            form_por_tiempo();
+            break;
     }
+}
+
+function form_por_tiempo(){
+    var input = $(document.createElement("input"));
+    input.attr("id","minutos");
+    input.attr("type","number");
+
+    var label = $(document.createElement("label"));
+    label.html("Ingrese los minutos que dispone para un viaje ida y vuelta");
+
+
+
+    $("#campos").append(label);
+    $("#campos").append(input);
 }
 
 // Agrega un combo con las empresas
