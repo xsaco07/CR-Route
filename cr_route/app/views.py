@@ -668,7 +668,7 @@ def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
     print("Final distances: ", final_distances)
     # Obtener todos los ids de la lista de tuplas
     map_iterator = map(lambda tuple_element: tuple_element[0], final_distances)
-    return list(map_iterator)[:n] # Convert it to list and return only the first n elements
+    return list(map_iterator)[-n:] # Convert it to list and return only the first n elements
 
 
 
