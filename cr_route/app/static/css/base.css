@@ -1,5 +1,8 @@
 body {
-  background-color: #F8F9F9;
+  background-image: url("https://weirdomatic.com/wp-content/pictures/2019/08/8f63b7f1d8fe332b7ede296fe552ed82.jpeg");
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
   font-family: 'Questrial', sans-serif;
 }
 
@@ -8,11 +11,13 @@ body {
 }
 
 #nav_bar {
+  transition: background 0.3s linear;
+  /* background-color: transparent; */
   border-bottom: white 2px solid;
   /* background-color: #C0392B; */
-  opacity: 0.9;
+  /* opacity: 0.9; */
   /* background-image: linear-gradient(to left bottom, #a41a1a, #b0003a, #ad0062, #930090, #4a20be); */
-  background-image: linear-gradient(to left top, #ff0000, #d1000a, #a3000d, #77000a, #4e0000);
+  /* background-image: linear-gradient(to left top, #ff0000, #d1000a, #a3000d, #77000a, #4e0000); */
   /* background-image: linear-gradient(to left top, #ff0000, #f60044, #d40072, #960099, #0917af); */
   /* background-image: linear-gradient(to left top, #ff0000, #f3002d, #e10044, #ca0055, #af0960); */
   /* background-image: linear-gradient(to left top, #0d602a, #06752e, #008b31, #00a232, #01b931); */
@@ -22,11 +27,13 @@ body {
   color: white !important;
   font-family: 'Exo', sans-serif;
   font-weight: bold;
-  margin: 0px 20px;
 }
 
 .nav-link:hover {
-  border-bottom: 1px solid white;
+  /* border-bottom: 1px solid white; */
+  /* background-image: linear-gradient(to right top, #ff0000, #d1000a, #a3000d, #77000a, #4e0000); */
+  /* background-color: #9D0000; */
+  color: #8ECD00 !important;
 }
 
 .navbar-brand {
@@ -43,4 +50,20 @@ body {
   font-family: 'Karla', sans-serif;
   font-style: italic;
   color: white !important;
+}
+
+li a .nav-icon {
+  font-size: 20px;
+  padding-right: 10%;
+}
+
+li a .log-icon {
+  font-size: 26px;
+  padding-right: 10%;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }

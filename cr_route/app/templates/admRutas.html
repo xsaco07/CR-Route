@@ -18,92 +18,108 @@
         {% endfor %}
     {% endif %}
 
-    <div class="container mt-5">
+    <div class="container mt-5 change_trigger">
 
         <div class="row justify-content-center">
 
             {% if session_key %}
+
               <div class="col-6 text-center">
                 <div class="card border-light">
                     <div class="card-body">
                       <h5 class="card-title">¿Desea contribuir?</h5>
                       <p class="card-text">Añada una nueva ruta</p>
                     </div>
-                    <a href="{% url 'insertar_ruta' %}"><i class="icon fas fa-plus"></i></a>
+                    <a href="{% url 'insertar_ruta' %}"><i class="icon fas fa-plus" id="plus_icon"></i></a>
                     <div class="card-footer">
                       <h6 class="text-muted">Puedes crear tantas rutas como requiera.</h6>
                     </div>
                 </div>
               </div>
+
+              <!--BUSCAR RUTAS-->
+              <div class="col-6 text-center">
+                <div class="card border-light">
+                    <div class="card-body">
+                      <h5 class="card-title">¿Cómo encontrar rutas específicas?</h5>
+                      <p class="card-text">Búsquelas acá</p>
+                    </div>
+                    <a href="{% url 'buscar_rutas' %}"><i class="icon fas fa-search-location" id="search_icon"></i></a>
+                    <div class="card-footer">
+                      <h6 class="text-muted">Puedes buscar rutas por destino, empresa, etc.</h6>
+                    </div>
+                </div>
+              </div>
+
             {% endif %}
 
-            <div class="col-6 text-center">
-              <div class="card border-light">
+        </div>
+
+        <!-- VERIFICAR SI EXISTEN RUTAS -->
+        {% if rutas.count == 0 %}
+          <div class="col-12 text-center">
+              <h2 class="text-white">No se ha agregado ninguna Ruta</h2>
+              <h3>Ingresa con tu cuenta para poder agregar alguna</h3>
+          </div>
+
+        {% else %}
+
+          <!--AGREGAR RUTAS DE LA BASE-->
+          <div class="row mt-5 justify-content-center animated fadeIn slow">
+            {% for ruta in rutas %}
+
+              <div class="col-3 text-center">
+
+                <div class="card mb-5">
+
                   <div class="card-body">
-                    <h5 class="card-title">¿Cómo encontrar rutas específicas?</h5>
-                    <p class="card-text">Búsquelas acá</p>
-                    <a href="{% url 'buscar_rutas' %}"><i class="icon fas fa-search-location"></i></a>
+
+                    <h5 class="card-title">Ruta #{{ruta.numero_ruta}}</h5>
+                    <p class="card-text">Descripción: {{ruta.descripcion}}</p>
+
+                    {# More info collapse #}
+                    <div class="collapse" id="info-collapse{{ruta.id}}">
+                      <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item">Número de ruta: {{ruta.numero_ruta}}</li>
+                        <li class="list-group-item">Precio: {{ruta.precio}} colones</li>
+                        <li class="list-group-item">Horario: {{ruta.horario}}</li>
+                        <li class="list-group-item">Duración promedio: {{ruta.duracion}} minutos</li>
+                          <li class="list-group-item">
+                            {% if ruta.rampa %}
+                              Cuenta con rampa
+                            {% else %}
+                              No cuenta con rampa
+                            {% endif %}
+                          </li>
+                      </ul>
+                    </div>
+
+                    {# More Info #}
+                    <a class="btn btn-dark" data-toggle="collapse" href="#info-collapse{{ruta.id}}" role="button" aria-expanded="false" aria-controls="info-collapse{{ruta.id}}">
+                      Más información
+                      <i class="fas fa-angle-down" style="color:white;"></i>
+                    </a>
+
+                    <br>
+                    <br>
+                      {% if session_key %}
+                    <a class="interact-button" href="{% url 'editar_ruta' id=ruta.id %}"><i class="fas fa-pencil-alt"></i></a>
+                    <a class="interact-button" href="{% url 'borrar_ruta' id=ruta.id %}"><i class="fas fa-trash-alt"></i></a>
+                      {% endif %}
                   </div>
+
                   <div class="card-footer">
-                    <h6 class="text-muted">Puedes buscar rutas por destino, empresa, etc.</h6>
-                  </div>
-              </div>
-            </div>
-        </div>
-
-        <div class="row mt-5">
-          {% for ruta in rutas %}
-
-            <div class="col-3 text-center">
-
-              <div class="card mb-5">
-
-                <div class="card-body">
-
-                  <h5 class="card-title">Ruta #{{ruta.numero_ruta}}</h5>
-                  <p class="card-text">Descripción: {{ruta.descripcion}}</p>
-
-                  {# More info collapse #}
-                  <div class="collapse" id="info-collapse{{ruta.id}}">
-                    <ul class="list-group list-group-flush mb-4">
-                      <li class="list-group-item">Número de ruta: {{ruta.numero_ruta}}</li>
-                      <li class="list-group-item">Precio: {{ruta.precio}} colones</li>
-                      <li class="list-group-item">Horario: {{ruta.horario}}</li>
-                      <li class="list-group-item">Duración promedio: {{ruta.duracion}} minutos</li>
-                        <li class="list-group-item">
-                          {% if ruta.rampa %}
-                            Cuenta con rampa
-                          {% else %}
-                            No cuenta con rampa
-                          {% endif %}
-                        </li>
-                    </ul>
+                    <h6 class="text-muted">Empresa: {{ruta.empresa.nombre}}</h6>
                   </div>
 
-                  {# More Info #}
-                  <a class="btn btn-dark" data-toggle="collapse" href="#info-collapse{{ruta.id}}" role="button" aria-expanded="false" aria-controls="info-collapse{{ruta.id}}">
-                    Más información
-                    <i class="fas fa-angle-down" style="color:white;"></i>
-                  </a>
-
-                  <br>
-                  <br>
-                    {% if session_key %}
-                  <a class="interact-button" href="{% url 'editar_ruta' id=ruta.id %}"><i class="fas fa-pencil-alt"></i></a>
-                  <a class="interact-button" href="{% url 'borrar_ruta' id=ruta.id %}"><i class="fas fa-trash-alt"></i></a>
-                    {% endif %}
-                </div>
-
-                <div class="card-footer">
-                  <h6 class="text-muted">Empresa: {{ruta.empresa.nombre}}</h6>
                 </div>
 
               </div>
 
-            </div>
+            {% endfor %}
 
-          {% endfor %}
-        </div>
+          </div>
+        {% endif %}
 
     </div>
 

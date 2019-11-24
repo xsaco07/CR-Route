@@ -1,46 +1,58 @@
 <nav class="navbar navbar-dark navbar-expand-lg sticky-top" id="nav_bar">
+
+    <div class="container">
+
       <a href="{% url 'inicio' %}" class="navbar-brand">
         <i class="fas fa-route"></i>
         RutaCR
       </a>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto" id="nav_list">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="navbar-collapse collapse" id="collapsingNavbar">
+
+        <ul class="navbar-nav nav-fill w-100" id="nav_list">
+
           <li class="nav-item">
-            <a href="{% url 'inicio' %}" class="nav-link">Inicio</a>
+            <a href="{% url 'empresas' %}" class="nav-link"><i class="nav-icon fas fa-bus"></i>Empresas</a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'empresas' %}" class="nav-link">Empresas</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'rutas' %}" class="nav-link">Rutas</a>
+            <a href="{% url 'rutas' %}" class="nav-link"><i class="nav-icon fas fa-map-marker-alt"></i>Rutas</a>
           </li>
           {% if session_key %}
             <li class="nav-item">
-            <a href="{% url 'buscar_logs' %}" class="nav-link">Logs</a>
+            <a href="{% url 'buscar_logs' %}" class="nav-link"><i class="nav-icon fas fa-table"></i>Logs</a>
             </li>
           {% endif %}
           <li class="nav-item">
-            <a href="/contacto/" class="nav-link">Contáctenos</a>
+            <a href="/contacto/" class="nav-link"><i class="nav-icon fas fa-phone-alt"></i>Contáctenos</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">Acerca de</a>
+            <a href="#" class="nav-link"><i class="nav-icon far fa-question-circle"></i>Acerca de</a>
           </li>
           {% if not session_key %}
               <li class="nav-item">
-                <a href="/login" class="nav-link">Ingresar</a>
+                <a href="/login" data-toggle="tooltip" data-placement="bottom" title="Iniciar sesión" class="nav-link"><i class="log-icon fas fa-sign-in-alt"></i></a>
               </li>
           {% endif %}
           {% if session_key %}
               <li class="nav-item">
-                <a href="/usuario/editar/{{id}}" class="nav-link">Perfil</a>
+                <a href="/usuario/editar/{{id}}" class="nav-link"><i class="nav-icon far fa-user"></i>Perfil</a>
               </li>
               <li class="nav-item">
-                <a href="/logout/" class="nav-link">Salir</a>
+                <a href="/logout/" data-toggle="tooltip" data-placement="bottom" title="Cerrar sesión" class="nav-link"><i class="log-icon fas fa-sign-out-alt"></i></a>
               </li>
           {% endif %}
         </ul>
       </div>
-      <span class="navbar-text">
-        <!--"La manera más rápida de orientarse"-->
-      </span>
-    </nav>
+
+    </div>
+
+    <script>
+      $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    </script>
+
+</nav>

@@ -2,10 +2,6 @@
   --secondary-color: #325082;
 }
 
-body {
-  background-image: linear-gradient(to right, #960000, #900000, #8a0000, #840000, #7e0000, #860002, #8f0003, #970004, #b00005, #ca0004, #e40003, #ff0000);
-}
-
 .interact-button{
   color: var(--secondary-color);
   font-size: 22px;
@@ -24,15 +20,14 @@ body {
   background-color: #F1F1F1;
 }
 
+.icon:hover {
+  color: #B10000;
+}
+
 .icon {
   color: var(--secondary-color);
   font-size: 40px;
-  padding: 10px;
-}
-
-.icon:hover {
-  /* font-size: 46px; */
-  color: #B10000;
+  padding-bottom: 4%;
 }
 
 .card-body a i {

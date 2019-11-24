@@ -1,0 +1,17 @@
+#form {
+  padding: 5%;
+  background-color: #F2F2F2;
+  border-radius: 15px;
+}
+
+#login_content {
+  margin-bottom: 3%;
+  border-bottom: 3px solid red;
+}
+
+#map {
+  width: 100%;
+  height: 50%;
+  border: solid 3px red;
+  border-radius: 10px;
+}
