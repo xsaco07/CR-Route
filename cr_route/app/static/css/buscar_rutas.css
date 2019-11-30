@@ -1,0 +1,30 @@
+#map {
+    width: 90%;
+    height: 100%;
+    border: 3px solid red;
+    border-radius: 10px;
+}
+
+#form-col {
+  width: 100%;
+  border: 3px solid white;
+  border-radius: 10px;
+  background-color: #F2F2F2;
+}
+
+.horizontal-line {
+  border-top: 3px solid white;
+}
+
+.search_icon {
+  font-size: 28px;
+  color: grey;
+}
+
+.search_icon:hover {
+  color: blue;
+}
+
+img:hover {
+  opacity: 0.4;
+}

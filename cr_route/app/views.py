@@ -571,27 +571,29 @@ def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long, ramp
     # TODO: optimizar esta consulta para que no traiga TODOS los puntos finales
     if (not bool(rampa_required)):
         print("NO OCUPA RAMPA")
-        puntos_finales = Punto.objects.raw(
-        "select *, max(serial) from app_punto group by ruta_id;")
+        # puntos_finales = Punto.objects.raw(
+        # "select *, max(serial) from app_punto group by ruta_id;")
+        puntos_finales = Punto.objects.filter(esParada = True)
     else:
         print("OCUPA RAMPA")
         puntos_finales = Punto.objects.raw(
-        "select *, max(serial) from app_punto inner join app_ruta on ruta_id = app_ruta.id where app_ruta.rampa = 1 group by ruta_id;")
+        "select * from app_punto inner join app_ruta on ruta_id = app_ruta.id where app_ruta.rampa = 1 and app_punto.esParada = 1 group by ruta_id;")
 
-    print("Puntos finales ", len(puntos_finales))
+    # print("Puntos finales ", puntos_finales)
 
-    # Obtener los ids de las paradas finales mas cercas al destino
-    ids_paradas_finales = get_n_nearest_points(len(puntos_finales), puntos_finales, dest_lat, dest_long)
+    # Obtener los ids de las paradas mas cercanas al destino
+    ids_paradas_finales = get_n_nearest_points(1, puntos_finales, dest_lat, dest_long)
 
-    print("Ids: ", ids_paradas_finales)
+    # print("Ids: ", ids_paradas_finales)
 
     # Obtener las rutas que hacen match con los ids de las paradas cercanas
     rutas_cercanas = []
     for id in ids_paradas_finales:
         parada = Punto.objects.filter(id = id)[0]
         rutas_cercanas.append(parada.ruta)
+        print("Numero de ruta con parada mas cercano al destino", parada.ruta.numero_ruta)
 
-    print("Rutas cercanas ", rutas_cercanas)
+    # print("Rutas cercanas ", rutas_cercanas)
 
     # Obtener las paradas de cada ruta (no los puntos normales) y dejarlos en una lista
     paradas_rutas_cercanas = []
@@ -600,7 +602,7 @@ def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long, ramp
         for parada in paradas_ruta_actual:
             paradas_rutas_cercanas.append(parada)
 
-    print("Paradas de rutas ", paradas_rutas_cercanas)
+    # print("Paradas de rutas ", paradas_rutas_cercanas)
 
     # Obtengo la parada mas cercana a mi posicion actual
     id_parada_mas_cercana = get_n_nearest_points(1, paradas_rutas_cercanas, usr_lat, usr_long)
@@ -609,14 +611,14 @@ def api_parada_mas_cercana(request, usr_lat, usr_long, dest_lat, dest_long, ramp
 
     parada_mas_cercana = Punto.objects.filter(id = id_parada_mas_cercana[0])
 
-    print("Parada mas cercana ", parada_mas_cercana)
+    # print("Parada mas cercana ", parada_mas_cercana)
 
     # Serializar las rutas cercanas a JSON
     resultado = []
     for ruta in rutas_cercanas:
         resultado.append(ruta_a_dicc(ruta.id))
 
-    print("Resultado ", resultado)
+    # print("Resultado ", resultado)
 
     # Se retorna las rutas mas cercanas y las coordenadas de la parada a la cual debo ir
     return HttpResponse(json.dumps({"rutas":resultado, "pnt_lat" : parada_mas_cercana[0].latitud, \
@@ -629,34 +631,38 @@ def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
 
     final_dest_lat = abs(dest_lat)
     final_dest_lon = abs(dest_lon)
+
+    # print("Abs lat ", final_dest_lat)
+    # print("Abs lon ", final_dest_lon)
+
     final_distances = []
 
     i = 0
+
     print("Len puntos ", len(puntos))
+
     while(i < len(puntos)):
 
         latitud_actual = 0
         longitud_actual = 0
         punto_id = -1
 
-        # Se verifica si el objeto es un punto literal o un QuerySet con un punto dentro
-        if(isinstance(puntos[1], QuerySet)):
-            latitud_actual = puntos[i][0].latitud
-            longitud_actual = puntos[i][0].longitud
-            punto_id = puntos[i][0].id
-        else:
-            latitud_actual = puntos[i].latitud
-            longitud_actual = puntos[i].longitud
-            punto_id = puntos[i].id
+        latitud_actual = abs(puntos[i].latitud)
+        longitud_actual = abs(puntos[i].longitud)
+        punto_id = puntos[i].id
+
+        # print("Lat punto ", punto_id, latitud_actual)
+        # print("Lon punto ", punto_id, longitud_actual)
 
         # Formula Pitagoras
         cateto_a = abs(latitud_actual - final_dest_lat)
         cateto_b = abs(longitud_actual - final_dest_lon)
+        # print("Cat A ", cateto_a)
+        # print("Cat B ", cateto_b)
         point_distance = math.sqrt(cateto_a**2 + cateto_b**2)
 
         # Guardar elementos (id, distancia al destino) en la lista final
         final_distances.append((punto_id, point_distance))
-        print("Append")
         i += 1
 
     # Retorna la distancia dentro de una tupla de final_distances
@@ -664,11 +670,14 @@ def get_n_nearest_points(n, puntos, dest_lat, dest_lon):
         return tuple_element[1]
 
     # Ordenar de manera ascendente y por distancia, no por id
+    print("Final distances not sorted: ", final_distances)
     final_distances.sort(key = get_distance_in_tuple)
     print("Final distances: ", final_distances)
+
     # Obtener todos los ids de la lista de tuplas
     map_iterator = map(lambda tuple_element: tuple_element[0], final_distances)
-    return list(map_iterator)[-n:] # Convert it to list and return only the first n elements
+
+    return list(map_iterator)[:n] # Convert it to list and return only the first n elements
 
 
 

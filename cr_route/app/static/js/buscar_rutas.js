@@ -35,6 +35,7 @@ var greenIcon = new L.Icon({
 
 // Dibuja un rectangulo marcado por los puntos_ref dentro del mapa
 function dibujar_area(){
+
     if(puntos_ref.length == 2){
         var lats = [puntos_ref[0].lat, puntos_ref[1].lat];
         var lons = [puntos_ref[0].lng, puntos_ref[1].lng];
@@ -87,14 +88,20 @@ function habilitar_seleccionar_area(){
     });
 
     mapa.on("click",function(e){
+
         // Habilitar click para agregar punto de destino
         if($("#criterio").val() == "parada_cercana" || $("#criterio").val() == "parada_cercana_rampa") {
-          console.log("Destiny added");
           var destinyMarker = L.marker(e.latlng, {icon: destinyMarkerIcon});
           destiny_coords = [e.latlng.lat, e.latlng.lng];
-          destinyMarker.addTo(mapa);
+
+          if(layer_group == undefined){
+            layer_group = L.layerGroup([destinyMarker]).addTo(mapa);
+          }
+          else layer_group.addLayer(destinyMarker).addTo(mapa);
+
         }
         else {
+
           if(puntos_ref.length < 2){
               puntos_ref.push(e.latlng);
               console.log("punto agregado "+puntos_ref);
@@ -130,6 +137,7 @@ function getRandomColor(){
 }
 
 function pedir_rutas(){
+    limpiar_mapa();
     // Ver qué criterio se está usando
     // y construir url según el criterio
     var criterio = $("#criterio").val();
@@ -169,7 +177,7 @@ function pedir_rutas(){
         api_url = `/api/parada_mas_cercana/${usr_lat},${usr_long}/${dest_lat},${dest_long}/${TRUE}`
     }
     else if(criterio == "tiempo"){
-        // Buscar valor el form 
+        // Buscar valor el form
         var tiempo = $("#minutos").val();
 
         api_url = `/api/rutas_por_tiempo/${tiempo}/`
@@ -211,7 +219,6 @@ function pedir_rutas(){
             var line = L.polyline(coords, {color:getRandomColor()});
             line.bindTooltip(`Ruta #${ruta.numero_ruta} ‎${ruta.descripcion} ₡${ruta.precio}`).openTooltip();
             polylines.push(line);
-
             console.log(`ruta numero [${ruta.numero_ruta}] agregada al mapa`);
         });
 

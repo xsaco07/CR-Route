@@ -35,12 +35,12 @@
       <div class="row mt-4 justify-content-center">
 
         <div class="col-6 text-center">
-          <div id="map" class="mb-3"></div>
+          <div id="map" class="mb-3 animated fadeInRight"></div>
           <button class="btn btn-primary mr-3" onclick="cleanMap()" type="button" id="clean_btn"><i class="fas fa-undo mr-2"></i>Limpiar</button>
           <input type="checkbox" id="flag" checked onchange="setFlag(this)" data-width="120" data-toggle="toggle" data-on="<i class='fas fa-map-marker-alt mr-2'></i>Punto" data-off="<i class='fas fa-bus-alt mr-2'></i>Parada" data-onstyle="primary" data-offstyle="success">
         </div>
 
-        <div class="col-6 text-center">
+        <div class="col-6 text-center animated fadeInLeft">
           {% include "form_ruta.html" %}
         </div>
 
@@ -52,7 +52,7 @@
       let paradas = '{{paradas | safe}}';
     </script>
 
-    <script src="{% static 'js/rutas.js' %}" charset="utf-8"></script>
     <script src="{% static 'js/center_map.js' %}" charset="utf-8"></script>
+    <script src="{% static 'js/rutas.js' %}" charset="utf-8"></script>
 
 {% endblock mainContent %}
