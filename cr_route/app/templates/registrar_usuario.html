@@ -1,16 +1,21 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}
     CR-Route
 {% endblock title %}
 
 {% block mainContent %}
-    <div class="container mb-5">
+
+    <link rel="stylesheet" href="{% static 'css/registro_usuario.css' %}">
+
+    <div class="container mb-5 mt-5 change_trigger">
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
+            <div class="col-8 text-center" id="form">
                 {% if titulo == "Editar usuario" %}
                     <br>
-                    <h1 class="text-center">Editar usuario colaborador</h1>
+                    <h1 class="text-center" id="login_content">Editar usuario colaborador</h1>
                     <br>
                 {% else %}
                     <br>
@@ -59,14 +64,14 @@
 
                     <!-- ENVIAR -->
                     {% if titulo == "Editar usuario" %}
-                        <button type="submit" class="btn btn-primary">Editar</button>
+                        <button type="submit" class="btn btn-success">Listo</button>
                     {% else %}
                         <button type="submit" class="btn btn-primary">Registrarse</button>
                     {% endif %}
 
                     {% if titulo != "Nombre usuario"  %}
-                        <div class="form-group" align="right">
-                        <a href="/usuario/borrar/{{id}}#">Eliminar mi cuenta permanentemente</a>
+                        <div class="form-group mt-4">
+                        <a class="text-white btn btn-danger" href="/usuario/borrar/{{id}}#">Eliminar mi cuenta permanentemente</a>
                         </div>
                     {% endif %}
                 </form>

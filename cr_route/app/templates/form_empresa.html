@@ -6,10 +6,13 @@
 {% endblock title %}
 
 {% block mainContent %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-8 text-center">
-                <h1 class="text-center" style="padding: 25px;">Formulario Empresa</h1>
+
+    <link rel="stylesheet" href="{% static 'css/form_empresa.css' %}">
+
+    <div class="container change_trigger mb-5">
+        <div class="row justify-content-center mt-5">
+            <div class="col-8 text-center" id="form">
+                <h1 class="text-center" id="login_content">Formulario Empresa</h1>
                 {% if info_message %}
                     <div class="alert alert-success" role="alert">
                         {{info_message}}
@@ -26,8 +29,8 @@
                     <div class="form-group">
                         <label for="zona">Zona</label>
                         <input required value="{{zona}}" name="zona" type="text" class="form-control" aria-describedby="help-zona">
-                        <small id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa (sitio origen, transucurso y destino)</small>
-                        <small id="help-zona" class="form-text text-muted">Ej: Alajuela - San José</small>
+                        <p id="help-zona" class="form-text text-muted">Lugares donde da servicio la empresa (sitio origen, transucurso y destino)</p>
+                        <p id="help-zona" class="form-text text-muted">Ej: Alajuela - San José</p>
                     </div>
 
                     <!-- TELEFONO -->
@@ -47,13 +50,13 @@
                     <div class="form-group">
                         <label for="direccion">Dirección física de su terminal</label>
                         <input required value="{{direccion}}" name="direccion" type="text" class="form-control">
-                        <small id="help-zona" class="form-text text-muted">Por señas</small>
+                        <p id="help-zona" class="form-text text-muted">Por señas</p>
                     </div>
 
                     <!-- MAPA -->
                     <div class="form-group">
                       <label for="map">Coloque la ubicación de la empresa en el mapa dándole click</label>
-                      <div id="map" style="width: 100%; height: 500px; border: solid 2px red; border-radius: 20px;"></div>
+                      <div id="map"></div>
                     </div>
 
                     <!-- LATITUD -->
@@ -72,7 +75,7 @@
                     <div class="form-group">
                         <label for="horario">Horario de atención al público</label>
                         <input required value="{{horario}}" name="horario" type="text" class="form-control" aria-describedby="help-horario">
-                        <small id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, de 8:00am a 5:00pm.</small>
+                        <p id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, de 8:00am a 5:00pm.</p>
                     </div>
 
                     <!-- ENVIAR -->

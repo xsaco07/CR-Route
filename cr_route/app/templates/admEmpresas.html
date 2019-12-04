@@ -10,22 +10,34 @@
   <link rel="stylesheet" href="{% static 'css/admRutasEmpresas.css' %}">
   <script src="{% static 'js/moreInfoButton.js' %}" charset="utf-8"></script>
 
-  <div class="container mt-5">
-    <div class="row">
+  <div class="container mt-5 change_trigger">
+    <div class="row justify-content-center">
+
+      <!-- VERIFICAR SI EXISTEN EMPRESAS -->
+      {% if empresas.count == 0 %}
+        <div class="col-12 text-center">
+            <h2 class="text-white">No se ha agregado ninguna Empresa</h2>
+            <h3>Crea una cuenta para poder agregar alguna</h3>
+        </div>
+      {% endif %}
 
       <!-- PARA AGREGAR EL CARD DE INSERTAR EMPRESA -->
-      <div class="col-3 text-center">
-          {% include "card.html" with empresa=None %}
-      </div>
+      {% if session_key %}
+        <div class="col-12 text-center mb-5">
+            {% include "card.html" with empresa=None %}
+        </div>
+
+      {% endif %}
 
       <!-- AGREGAR CARDS DE EMPRESAS -->
       {% for empresa in empresas %}
-          <div class="col-3 text-center">
+          <div class="col-3 text-center animated fadeIn slow">
               {% include "card.html" with empresa=empresa %}
           </div>
       {% endfor %}
 
     </div>
+
   </div>
 
 {% endblock %}
