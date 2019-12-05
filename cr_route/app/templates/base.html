@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js" charset="utf-8"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <!-- Fonts -->    <!-- Fonts -->
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=
     Acme|Anton|Asap|Barlow+Condensed|Caveat|Comfortaa|Dancing+Script|
     Exo|Karla|Lobster|Montserrat|Nunito|Pacifico|Quicksand|Raleway|Satisfy|Cairo|Questrial|
@@ -54,12 +54,12 @@
       console.log("On function");
       // Change navbar on scroll
       var scroll_start = 0;
-      var startchange = $('.change_trigger');
-      var offset = startchange.offset();
+      var element = $('.change_trigger');
+      var offset = element.offset();
 
-      if(startchange.length){
+      if(element.length){
         $(document).scroll(function(){
-          scroll_start = $(this).scrollTop();
+          scroll_start = $(this).scrollTop() + $('#nav_bar').outerHeight();
           if(scroll_start > offset.top){
             $('#nav_bar').css('background-color', '#790909');
           }else{
