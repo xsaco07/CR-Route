@@ -24,7 +24,7 @@
 
             {% if session_key %}
 
-              <div class="col-6 text-center">
+              <div class="col-6 text-center animated fadeIn">
                 <div class="card border-light">
                     <div class="card-body">
                       <h5 class="card-title">¿Desea contribuir?</h5>
@@ -37,21 +37,21 @@
                 </div>
               </div>
 
-              <!--BUSCAR RUTAS-->
-              <div class="col-6 text-center">
-                <div class="card border-light">
-                    <div class="card-body">
-                      <h5 class="card-title">¿Cómo encontrar rutas específicas?</h5>
-                      <p class="card-text">Búsquelas acá</p>
-                    </div>
-                    <a href="{% url 'buscar_rutas' %}"><i class="icon fas fa-search-location" id="search_icon"></i></a>
-                    <div class="card-footer">
-                      <h6 class="text-muted">Puedes buscar rutas por destino, empresa, etc.</h6>
-                    </div>
-                </div>
-              </div>
-
             {% endif %}
+
+            <!--BUSCAR RUTAS-->
+            <div class="col-6 text-center animated fadeIn">
+              <div class="card border-light">
+                  <div class="card-body">
+                    <h5 class="card-title">¿Cómo encontrar rutas específicas?</h5>
+                    <p class="card-text">Búsquelas acá</p>
+                  </div>
+                  <a href="{% url 'buscar_rutas' %}"><i class="icon fas fa-search-location" id="search_icon"></i></a>
+                  <div class="card-footer">
+                    <h6 class="text-muted">Puedes buscar rutas por destino, empresa, etc.</h6>
+                  </div>
+              </div>
+            </div>
 
         </div>
 
