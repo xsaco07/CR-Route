@@ -1,0 +1,75 @@
+<form method="POST" action="{{action}}" id="ruta-form">
+
+    {# Hidden input to hold the points #}
+    <input hidden type="text" name="puntos" value="" id="puntos-ruta">
+
+    <!-- SCRIPT PARA CARGAR EL COMBO, OCUPA JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+        var selectElementID = "#empresa";
+        $(document).ready(function(){
+            $.ajax({
+                url:"/empresa/listar/meta/"
+            }).done(function(response){
+                $(selectElementID).html(response);
+
+                // Actualizar los datos en la base
+                $("select[name='rampa'").val("{{rampa}}");
+                $("select[name='id_empresa']").val("{{empresa}}");
+            });
+        });
+    </script>
+
+    <!-- NUMERO DE RUTA -->
+    <div class="form-group">
+        <label for="numero_ruta">Número de ruta</label>
+        <input value="{{numero_ruta}}" name="numero_ruta" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números" required>
+    </div>
+
+    <!-- COMBO DE EMPRESA -->
+    <div class="form-group">
+        <label for="empresa">Empresa</label>
+        <select id="empresa" value="" name="id_empresa" class="form-control" required>
+                <option>Loading... </option>
+        </select>
+    </div>
+
+    <!-- DESCRIPCION -->
+    <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <input value="{{descripcion}}" name="descripcion" type="text" class="form-control" required>
+    </div>
+
+    <!-- PRECIO -->
+    <div class="form-group">
+        <label for="precio">Costo del pasaje</label>
+        <input value="{{precio}}" name="precio" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
+    </div>
+
+    <!-- HORARIO -->
+    <div class="form-group">
+        <label for="horario">Horario de servicio</label>
+        <input value="{{horario}}" name="horario" type="text" class="form-control" required>
+        <p id="help-horario" class="form-text text-muted">Ej: Lunes a Viernes, a partir de las 6:00am luego cada 30 minutos hasta las 9:00pm.</p>
+    </div>
+
+    <!-- DURACION -->
+    <div class="form-group">
+        <label for="duracion">Duración</label>
+        <input value="{{duracion}}" name="duracion" type="text" class="form-control" pattern="\d*" required maxlength="5" title="Solo números">
+        <p id="help-horario" class="form-text text-muted">Aproximado del viaje en minutos. Ej: 60</p>
+    </div>
+
+    <!-- RAMPA -->
+    <div class="form-group">
+        <select class="form-control" name="rampa">
+            <option value="" disabled selected>¿Cuenta con unidades para el transporte de personas con discapacidad?</option>
+            <option value="True" required>Sí</option>
+            <option value="False" required>No</option>
+        </select>
+    </div>
+
+    <!-- ENVIAR -->
+    <button type="submit" class="btn btn-success" style="padding: 5px 50px; font-size: 18px;">Listo</button>
+
+</form>

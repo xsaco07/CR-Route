@@ -1,0 +1,31 @@
+* {
+  margin: 0px;
+}
+
+body {
+}
+
+.container {
+  text-align: center;
+}
+
+#map {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  border: solid 3px red;
+  border-radius: 10px;
+}
+
+#title {
+  margin-top: 2%;
+  border-bottom: 5px red solid;
+  display: inline-block;
+  padding: 5px;
+}
+
+#ruta-form {
+  background-color: #F2F2F2;
+  border-radius: 10px;
+  padding: 25px;
+}

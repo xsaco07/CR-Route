@@ -1,0 +1,26 @@
+.horizontal-line {
+  border-top: 3px solid white;
+}
+
+#data-list:hover {
+}
+
+#data-list {
+  border-radius: 10px;
+  opacity: 0.9;
+  background-color: #E1E1E1;
+  color: black;
+  padding: 1%;
+}
+
+label {
+  font-size: 22px;
+  text-decoration: underline;
+}
+
+#date-filter {
+  padding: 1%;
+  background-color: #C40000;
+  background: rgba(124, 0, 0, 0.8);
+  border-radius: 10px;
+}

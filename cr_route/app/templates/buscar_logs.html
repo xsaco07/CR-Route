@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Buscar registro de actividad
+{% endblock title %}
+
+
+{% block mainContent %}
+
+  <link rel="stylesheet" href="{% static 'css/buscar_logs.css' %}">
+
+  <div class="container mt-5 mb-5">
+
+      <div class="row justify-content-center mb-5 change_trigger">
+        <div class="col-12 align-self-center text-center">
+          <h3 class="text-light">En esta sección podrá visualizar las acciones que cada usuario ha realizado en un lapso de tiempo.</h3>
+          <h3 class="text-light">La información será mostrada en una tabla donde encontrará datos como:</h3>
+          <h4>
+            <ul id="data-list">
+              <li>Acción realizada</li>
+              <li>Usuario que realizó la acción</li>
+              <li>Los datos sobre los cuales se actuó</li>
+              <li>La fecha y hora exactas</li>
+            </ul>
+          </h4>
+          <div class="mt-4 horizontal-line"></div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+
+          <div class="col-4 text-center" id="date-filter">
+              <form>
+                  <div class="form-group">
+                      <label class="text-light" for="inicio">Fecha de inicio</label>
+                      <input class="form-control" id="inicio" type="date">
+                  </div>
+
+                  <div class="form-group">
+                      <label class="text-light" for="fin">Fecha de fin</label>
+                      <input class="form-control" id="fin" type="date">
+                  </div>
+
+                  <button class="btn btn-primary">Buscar</button>
+
+              </form>
+          </div>
+      </div>
+
+      <div class="row justify-content-center mt-5">
+          <table class="table table-striped table-dark" id="results">
+              <thead class="thead-light">
+                  <tr>
+                      <th>Usuario</th>
+                      <th>Accion</th>
+                      <th>Tabla</th>
+                      <th>Fecha</th>
+                  </tr>
+              </thead>
+          </table>
+      </div>
+
+      <script src="{% static 'js/buscar_logs.js' %}" charset="utf-8"></script>
+
+  </div>
+
+
+{% endblock %}

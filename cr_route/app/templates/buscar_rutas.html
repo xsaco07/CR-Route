@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Buscar rutas
+{% endblock title %}
+
+
+{% block mainContent %}
+
+  <link rel="stylesheet" href="{% static 'css/buscar_rutas.css' %}">
+
+  <div class="container mt-5 mb-5">
+
+      <div class="row justify-content-center mb-5 change_trigger">
+        <div class="col-12 align-self-center text-center">
+          <h3 class="text-light">En esta sección podrá buscar rutas existentes según una serie de filtros.</h3>
+          <h3 class="text-light">Cada ruta será mostrara de distinto color para poder diferenciarlas de manera más sencilla.</h3>
+          <div class="mt-4 horizontal-line"></div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+
+          <!-- COLUMNA IZQUIERDA ES EL MAPA -->
+          <div class="col-9 text-center animated zoomIn">
+
+              <div id="divmapa">
+
+                  <!-- MAPA -->
+                  <div id="map"></div>
+
+                  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+                      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+                      crossorigin="" />
+                  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+                      integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+                      crossorigin=""></script>
+
+                  <!-- PARA CENTRAR EL MAPA    -->
+                  <script src="{% static 'js/center_map.js' %}"></script>
+              </div>
+          </div>
+
+          <!-- COLUMNA DERECHA ES EL FORMULARIO DE BUSQUEDA -->
+          <div class="col-3 text-center animated zoomIn" id="form-col">
+
+              <!--Filtros-->
+              <div class="row">
+                <div class="col-12">
+                  <form>
+                      <div class="form-group">
+                          <h4 class="mt-3">Filtro de búsqueda</h4>
+                          <select class="form-control mt-4" id="criterio">
+                              <option value="">Seleccione el criterio</option>
+                              <option value="parada_cercana">Parada más cerca para llegar a un destino</option>
+                              <option value="parada_cercana_rampa">Parada más cerca con rampa</option>
+                              <option value="empresa">Por empresa</option>
+                              <option value="ruta">Por ruta</option>
+                              <option value="destino">Por destino común</option>
+                              <option value="paradas">Por paradas intermedias</option>
+                              <option value="tiempo">Por tiempo ida/vuelta</option>
+                          </select>
+
+                          <div id="campos" class="form-group mt-3">
+                              <!-- Aquí se colocan objetos dinámicos según el criterio -->
+                          </div>
+
+                          <div class="mt-4 horizontal-line"></div>
+
+                          <div class="row">
+                            <div class="col-12 mt-4">
+                              <button id="limpiar" class="btn btn-primary"><i class="fas fa-eraser mr-2"></i>Limpiar área</button>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 mt-4 mb-3">
+                              <button id="limpiar_mapa" class="btn btn-success"><i class="fas fa-undo mr-2"></i>Limpiar mapa</button>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 mb-4">
+                              <button data-toggle="tooltip" data-placement="bottom" title="Buscar" id="buscar" class="btn"><i class="search_icon fas fa-search"></i></button>
+                              <div class="mt-4 horizontal-line"></div>
+                            </div>
+                          </div>
+                      </div>
+                  </form>
+                </div>
+              </div>
+
+              <!--Simbologia-->
+              <div class="row">
+                <div class="col-12">
+
+                  <div class="card bg-warning">
+                      <div class="card-header">
+                          <h3>Simbología</h3>
+                      </div>
+                      <div class="card-body bg-light">
+                          <img data-toggle="tooltip" data-placement="left" title="Parada más cercana" class="mx-2 my-2 border-bottom border-warning" width="30px" height="43px" src="https://www.uv.es/uwm/imatges/GMaps/markers/red-marker.png" alt="">
+                          <img data-toggle="tooltip" data-placement="top" title="Punto intermedio de ruta" class="mx-2 my-2 border-bottom border-warning" width="43px" height="43px" src="https://icon-library.net/images/google-map-marker-icon/google-map-marker-icon-24.jpg" alt="">
+                          <img data-toggle="tooltip" data-placement="right" title="Parada" class="mx-2 my-2 border-bottom border-warning" width="30px" height="43px" src="https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png" alt="">
+                          <img data-toggle="tooltip" data-placement="bottom" title="Mi posición" class="mx-2 my-2 border-bottom border-warning" width="43px" height="43px" src="https://png.pngtree.com/svg/20170117/coordinate_646457.png" alt="">
+                          <img data-toggle="tooltip" data-placement="bottom" title="Punto de destino" class="mx-2 my-2 border-bottom border-warning" width="43px" height="43px" src="https://icons-for-free.com/iconfiles/png/512/my+location+48px-131987943379423279.png" alt="">
+                      </div>
+                  </div>
+
+                </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+
+  <script src="{% static 'js/buscar_rutas.js' %}" charset="utf-8"></script>
+
+{% endblock %}

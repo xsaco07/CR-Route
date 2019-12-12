@@ -1,0 +1,36 @@
+:root {
+  --secondary-color: #325082;
+}
+
+.interact-button{
+  color: var(--secondary-color);
+  font-size: 22px;
+}
+
+.interact-button:hover {
+  color: #C0392B !important;
+}
+
+.card {
+  border-bottom: solid 10px var(--secondary-color);
+  background-color: white;
+}
+
+.card:hover {
+  background-color: #F1F1F1;
+}
+
+.icon:hover {
+  color: #B10000;
+}
+
+.icon {
+  color: var(--secondary-color);
+  font-size: 40px;
+  padding-bottom: 4%;
+}
+
+.card-body a i {
+  padding: 5px;
+  font-size: 24px;
+}
