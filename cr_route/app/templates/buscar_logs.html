@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}
 Buscar registro de actividad
 {% endblock title %}
@@ -7,80 +7,62 @@ Buscar registro de actividad
 
 {% block mainContent %}
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-4">
-            <form>
-                <div class="form-group">
-                    <label for="inicio">Fecha de inicio</label>
-                    <input class="form-control" id="inicio" type="date">
-                </div>
+  <link rel="stylesheet" href="{% static 'css/buscar_logs.css' %}">
 
-                <div class="form-group">
-                    <label for="fin">Fecha de fin</label>
-                    <input class="form-control" id="fin" type="date">
-                </div>
+  <div class="container mt-5 mb-5">
 
-                <button class="btn btn-primary">Buscar</button>
-                <script>
-                    function vaciar_tabla(){
-                        var tabla = document.getElementById("results");
-                        // Limpiar la tabla
-                        while(2 <= tabla.children.length){
-                            tabla.removeChild(tabla.children[1]);
-                            console.log("elem removed");
-                        }
-                    }
-
-                    $(document).ready(function(){
-                        $("form").submit(function(e){
-                            e.preventDefault(e); // evitar enviar el formulario 
-                        });
-
-                        $("button").on("click",function(){
-                            vaciar_tabla();
-
-                            var fecha_inicio = $("#inicio").val();
-                            var fecha_fin = $("#fin").val();
-
-                            $.ajax({
-                                url:`/api/buscar_logs/${fecha_inicio}/${fecha_fin}/`
-                            }).done(function(data){
-                                // parsear resultados
-                                var logs = JSON.parse(data);
-                                var table = $("table");
-
-                                logs.forEach(function(log){
-                                    var row = $(document.createElement("tr"));
-                                    const attrs = ["usuario","accion","tabla","fecha"];
-                                    attrs.forEach(function(elem){
-                                        var col = $(document.createElement("td"));
-                                        col.html(log[elem]);
-                                        row.append(col);
-                                    });
-                                    table.append(row);
-                                });
-                            });
-                        });
-                    });
-                </script>
-            </form>
+      <div class="row justify-content-center mb-5 change_trigger">
+        <div class="col-12 align-self-center text-center">
+          <h3 class="text-light">En esta sección podrá visualizar las acciones que cada usuario ha realizado en un lapso de tiempo.</h3>
+          <h3 class="text-light">La información será mostrada en una tabla donde encontrará datos como:</h3>
+          <h4>
+            <ul id="data-list">
+              <li>Acción realizada</li>
+              <li>Usuario que realizó la acción</li>
+              <li>Los datos sobre los cuales se actuó</li>
+              <li>La fecha y hora exactas</li>
+            </ul>
+          </h4>
+          <div class="mt-4 horizontal-line"></div>
         </div>
-    </div>
+      </div>
 
-    <div class="row justify-content-center">
-        <table class="table table-bordered" id="results">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Usuario</th>
-                    <th>Accion</th>
-                    <th>Tabla</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-</div>
+      <div class="row justify-content-center">
+
+          <div class="col-4 text-center" id="date-filter">
+              <form>
+                  <div class="form-group">
+                      <label class="text-light" for="inicio">Fecha de inicio</label>
+                      <input class="form-control" id="inicio" type="date">
+                  </div>
+
+                  <div class="form-group">
+                      <label class="text-light" for="fin">Fecha de fin</label>
+                      <input class="form-control" id="fin" type="date">
+                  </div>
+
+                  <button class="btn btn-primary">Buscar</button>
+
+              </form>
+          </div>
+      </div>
+
+      <div class="row justify-content-center mt-5">
+          <table class="table table-striped table-dark" id="results">
+              <thead class="thead-light">
+                  <tr>
+                      <th>Usuario</th>
+                      <th>Accion</th>
+                      <th>Tabla</th>
+                      <th>Fecha</th>
+                  </tr>
+              </thead>
+          </table>
+      </div>
+
+      <script src="{% static 'js/buscar_logs.js' %}" charset="utf-8"></script>
+
+  </div>
 
 
 {% endblock %}
