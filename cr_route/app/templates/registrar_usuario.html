@@ -10,17 +10,13 @@
 
     <link rel="stylesheet" href="{% static 'css/registro_usuario.css' %}">
 
-    <div class="container mb-5 mt-5 animated rotateInUpLeft change_trigger">
+    <div class="container mb-5 mt-5 change_trigger animated fadeInLeft">
         <div class="row justify-content-center">
             <div class="col-8 text-center" id="form">
                 {% if titulo == "Editar usuario" %}
-                    <br>
                     <h1 class="text-center" id="login_content">Editar usuario colaborador</h1>
-                    <br>
                 {% else %}
-                    <br>
                     <h1 class="text-center">Registrar nuevo usuario colaborador</h1>
-                    <br>
                 {% endif %}
                 {% if mensaje %}
                     <div class="alert alert-primary" role="alert">
