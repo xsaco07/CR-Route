@@ -114,6 +114,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+rutascrenv/
 
 # Spyder project settings
 .spyderproject
