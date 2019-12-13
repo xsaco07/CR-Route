@@ -48,10 +48,3 @@ img{
   width: 30%;
   height: 300px;
 }
-
-body {
-  background-image: url("https://weirdomatic.com/wp-content/pictures/2019/08/8f63b7f1d8fe332b7ede296fe552ed82.jpeg");
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
