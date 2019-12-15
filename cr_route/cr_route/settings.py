@@ -11,23 +11,32 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import django_heroku
+import dj_database_url
+import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Load environment variables from .env if it exists
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ji0^)hbr(-$inmz-0yu1l^cr!0kdf&b)!$pc@kh&#$&c93%x7%'
+# SECRET_KEY = 'ji0^)hbr(-$inmz-0yu1l^cr!0kdf&b)!$pc@kh&#$&c93%x7%'
+SECRET_KEY = os.environ.get('SECRET_KEY') # Production secret key
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# If is running locally takes environment var = True
+# If is running remotely takes environment var = False
+DEBUG = (os.environ.get('DEBUG') == 'True')
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['rutasabiertascr.herokuapp.com']
 
 # Application definition
 
@@ -43,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,13 +85,15 @@ WSGI_APPLICATION = 'cr_route.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -119,9 +131,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/cr_route/app/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# CSRF COOKIES
+CSRF_COOKIE_SECURE = True
+
+# SESSION SECURE
+SESSION_COOKIE_SECURE = True
+
+# SECURITY MIDDLEWARE
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
 
 # Configure Django App for Heroku.
-import django_heroku
 django_heroku.settings(locals())
+
+# sslmode issue workaround
+del DATABASES['default']['OPTIONS']['sslmode']
